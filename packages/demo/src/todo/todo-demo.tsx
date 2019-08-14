@@ -6,7 +6,7 @@ import {
   FormRadioGroup,
   FormDate,
   FormDateRange,
-} from '@byted/quantum-form';
+} from '@jzl/m-form';
 import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
 import { Button } from 'antd';

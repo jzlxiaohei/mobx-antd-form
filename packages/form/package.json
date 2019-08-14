@@ -1,12 +1,15 @@
 {
-  "name": "@byted/quantum-form",
+  "name": "@jzl/m-form",
   "version": "0.0.1",
-  "main": "lib/quantum-form.js",
-  "module": "lib/quantum-form.module.js",
+  "main": "lib/m-form.js",
+  "module": "lib/m-form.module.js",
   "types": "lib/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "tsc": "tsc"
+    "check": "tsc",
+    "build": "node scripts/build.js",
+    "prepare": "npm run check && npm run build",
+    "publish": "npm publish --access public"
   },
   "dependencies": {
     "@types/lodash.get": "^4.4.6",

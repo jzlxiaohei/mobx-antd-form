@@ -18,12 +18,22 @@ const externals = Object.keys(pkg.peerDependencies);
 console.log(`external: `, externals);
 
 function runTypeScriptBuild(outDir, target, declarations) {
-  console.log(`Running typescript build (target: ${ts.ScriptTarget[target]}) in ${outDir}/`);
+  console.log(
+    `Running typescript build (target: ${ts.ScriptTarget[target]}) in ${outDir}/`,
+  );
 
   const tsConfig = path.resolve('tsconfig.json');
-  const json = ts.parseConfigFileTextToJson(tsConfig, ts.sys.readFile(tsConfig), true);
+  const json = ts.parseConfigFileTextToJson(
+    tsConfig,
+    ts.sys.readFile(tsConfig),
+    true,
+  );
 
-  const { options } = ts.parseJsonConfigFileContent(json.config, ts.sys, path.dirname(tsConfig));
+  const { options } = ts.parseJsonConfigFileContent(
+    json.config,
+    ts.sys,
+    path.dirname(tsConfig),
+  );
 
   options.target = target;
   options.outDir = outDir;
@@ -32,22 +42,21 @@ function runTypeScriptBuild(outDir, target, declarations) {
   options.module = ts.ModuleKind.ES2015;
   options.importHelpers = true;
   options.noEmitHelpers = true;
+  options.noEmit = false;
   if (declarations) options.declarationDir = path.resolve('.', 'lib');
 
   const rootFile = path.resolve('src', 'index.ts');
   const host = ts.createCompilerHost(options, true);
   const prog = ts.createProgram([rootFile], options, host);
-  const result = prog.emit();
-  if (result.emitSkipped) {
-    const message = result.diagnostics
-      .map(d => `${ts.DiagnosticCategory[d.category]} ${d.code} (${d.file}:${d.start}): ${d.messageText}`)
-      .join('\n');
-
-    throw new Error(`Failed to compile typescript:\n\n${message}`);
-  }
+  prog.emit();
 }
 
-async function generateBundledModule(inputFile, outputFile, format, production) {
+async function generateBundledModule(
+  inputFile,
+  outputFile,
+  format,
+  production,
+) {
   console.log(`Generating ${outputFile} bundle.`);
   console.log(inputFile);
   let plugins = [
@@ -58,7 +67,10 @@ async function generateBundledModule(inputFile, outputFile, format, production) 
     filesizePlugin(),
   ];
   if (production) {
-    plugins = plugins.concat([replacePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }), terserPlugin()]);
+    plugins = plugins.concat([
+      replacePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }),
+      terserPlugin(),
+    ]);
   }
 
   const bundle = await rollup({
@@ -86,15 +98,45 @@ async function build() {
   const es6Build = path.join('.build.es6', 'index.js');
 
   await Promise.all([
-    generateBundledModule(es5Build, path.join('lib', 'quantum-form.js'), 'cjs', false),
-    generateBundledModule(es5Build, path.join('lib', 'quantum-form.min.js'), 'cjs', true),
+    generateBundledModule(
+      es5Build,
+      path.join('lib', 'm-form.js'),
+      'cjs',
+      false,
+    ),
+    generateBundledModule(
+      es5Build,
+      path.join('lib', 'm-form.min.js'),
+      'cjs',
+      true,
+    ),
 
-    generateBundledModule(es5Build, path.join('lib', 'quantum-form.module.js'), 'es', false),
+    generateBundledModule(
+      es5Build,
+      path.join('lib', 'm-form.module.js'),
+      'es',
+      false,
+    ),
 
-    generateBundledModule(es6Build, path.join('lib', 'quantum-form.es6.js'), 'es', false),
+    generateBundledModule(
+      es6Build,
+      path.join('lib', 'm-form.es6.js'),
+      'es',
+      false,
+    ),
 
-    generateBundledModule(es5Build, path.join('lib', 'quantum-form.umd.js'), 'umd', false),
-    generateBundledModule(es5Build, path.join('lib', 'quantum-form.umd.min.js'), 'umd', true),
+    generateBundledModule(
+      es5Build,
+      path.join('lib', 'm-form.umd.js'),
+      'umd',
+      false,
+    ),
+    generateBundledModule(
+      es5Build,
+      path.join('lib', 'm-form.umd.min.js'),
+      'umd',
+      true,
+    ),
   ]);
 }
 
