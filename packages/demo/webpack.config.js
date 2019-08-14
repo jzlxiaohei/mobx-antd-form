@@ -26,7 +26,9 @@ function getStyleLoader() {
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
-  entry: isDev ? ['react-hot-loader/patch', './src/index.tsx'] : ['./src/index.tsx'],
+  entry: isDev
+    ? ['react-hot-loader/patch', './src/index.tsx']
+    : ['./src/index.tsx'],
   output: {
     publicPath: '/',
     filename: 'bundle.js',
@@ -35,7 +37,6 @@ module.exports = {
 
   // Enable sourcemaps for debugging webpack output.
   devtool: 'source-map',
-
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: isDev
