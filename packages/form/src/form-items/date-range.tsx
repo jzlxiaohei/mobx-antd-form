@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DatePicker } from 'antd';
-import formHoc, { IOriginProps } from './utils/hoc';
+import formHoc, { IOriginProps } from './hoc';
 import moment, { Moment } from 'moment';
 import { number } from 'prop-types';
 
@@ -15,7 +15,13 @@ function FormDate(props: IOriginProps) {
   if (!Array.isArray(props.value)) {
     throw new Error(`FormDateRange need array value`);
   }
-  return <DatePicker.RangePicker {...props} value={props.value} onChange={handleChange} />;
+  return (
+    <DatePicker.RangePicker
+      {...props}
+      value={props.value}
+      onChange={handleChange}
+    />
+  );
 }
 
 FormDate.transformModelToView = function(timestamps: number[], props: IProps) {

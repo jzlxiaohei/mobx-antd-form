@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DatePicker } from 'antd';
-import formHoc, { IOriginProps } from './utils/hoc';
+import formHoc, { IOriginProps } from './hoc';
 import moment, { Moment } from 'moment';
 
 interface IProps {

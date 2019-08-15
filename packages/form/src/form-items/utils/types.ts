@@ -7,7 +7,7 @@ export interface IChangeParam<M, T> {
 }
 
 export interface ICommonInputProps<M> {
-  model: M;
+  model?: M;
   path: string;
   value?: any;
   onChange?(param: IChangeParam<M, any>): void;

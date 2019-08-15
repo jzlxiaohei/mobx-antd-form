@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Radio } from 'antd';
-import formHoc, { IOriginProps } from './utils/hoc';
+import formHoc, { IOriginProps } from './hoc';
 import { RadioChangeEvent } from 'antd/lib/radio';
-import { ICommonInputProps } from './types';
+import { ICommonInputProps } from './utils/types';
 
 interface F {
   <M extends Object>(rawProps: ICommonInputProps<M>): React.ReactElement;

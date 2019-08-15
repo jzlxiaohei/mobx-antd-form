@@ -6,6 +6,7 @@ import {
   FormRadioGroup,
   FormDate,
   FormDateRange,
+  FormContext,
 } from '@jzl/m-form/src';
 import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
@@ -52,9 +53,10 @@ const formItemLayout = {
 };
 
 const todo = new Todo();
-
+const todo1 = new Todo();
 // for watching value in console;
 (window as any).todo = todo;
+(window as any).todo1 = todo1;
 
 export default observer(function TodoDemo() {
   function handelClick() {
@@ -62,77 +64,87 @@ export default observer(function TodoDemo() {
   }
   return (
     <div className="todo-demo">
-      <FormInput
-        itemProps={formItemLayout}
-        className="input-class"
-        label="name"
-        model={todo}
-        path="name"
-        placeholder="todo title"
-      />
-      <FormInput label="嵌套属性" model={todo} path="nested.name" />
-      <FormCheckbox label="done" model={todo} path="done" />
-      <FormDate model={todo} path="createDate" label="创建时间" />
-      <FormDate
-        model={todo}
-        path="createDateUnix"
-        label="创建时间(unix)"
-        unix
-        showTime
-      />
-      <FormDateRange model={todo} path="dateRange" label="range" />
+      <FormContext model={todo1}>
+        <FormInput
+          itemProps={formItemLayout}
+          className="input-class"
+          label="name"
+          path="name"
+          placeholder="todo title"
+        />
+      </FormContext>
+      <FormContext model={todo}>
+        <FormInput
+          itemProps={formItemLayout}
+          className="input-class"
+          label="name"
+          path="name"
+          placeholder="todo title"
+        />
+        <FormInput label="嵌套属性" path="nested.name" />
+        <FormCheckbox label="done" path="done" />
+        <FormDate path="createDate" label="创建时间" />
+        <FormDate
+          model={todo}
+          path="createDateUnix"
+          label="创建时间(unix)"
+          unix
+          showTime
+        />
+        <FormDateRange path="dateRange" label="range" />
 
-      <FormRadioGroup label="放弃原因" model={todo} path="giveUpReason">
-        {GiveUpOptions.map(opt => {
-          return (
-            <FormRadioGroup.Radio key={opt.value} value={opt.value}>
+        <FormRadioGroup label="放弃原因" path="giveUpReason">
+          {GiveUpOptions.map(opt => {
+            return (
+              <FormRadioGroup.Radio key={opt.value} value={opt.value}>
+                {opt.title}
+                {todo.giveUpReason === GiveUpReason.OtherReason &&
+                  opt.value === GiveUpReason.OtherReason && (
+                    <FormInput
+                      noFormItem
+                      model={todo}
+                      path="otherGiveUpReasonText"
+                    />
+                  )}
+              </FormRadioGroup.Radio>
+            );
+          })}
+        </FormRadioGroup>
+
+        <FormSelect
+          label="优先级"
+          model={todo}
+          path="priority"
+          style={{
+            minWidth: '200px',
+          }}
+          mode="multiple"
+        >
+          {PriorityOptions.map(opt => (
+            <FormSelect.Option key={opt.value} {...opt}>
               {opt.title}
-              {todo.giveUpReason === GiveUpReason.OtherReason &&
-                opt.value === GiveUpReason.OtherReason && (
-                  <FormInput
-                    noFormItem
-                    model={todo}
-                    path="otherGiveUpReasonText"
-                  />
-                )}
-            </FormRadioGroup.Radio>
-          );
-        })}
-      </FormRadioGroup>
+            </FormSelect.Option>
+          ))}
+        </FormSelect>
 
-      <FormSelect
-        label="优先级"
-        model={todo}
-        path="priority"
-        style={{
-          minWidth: '200px',
-        }}
-        mode="multiple"
-      >
-        {PriorityOptions.map(opt => (
-          <FormSelect.Option key={opt.value} {...opt}>
-            {opt.title}
-          </FormSelect.Option>
-        ))}
-      </FormSelect>
-
-      <FormSelect
-        label="分类"
-        model={todo}
-        path="category"
-        style={{
-          minWidth: '200px',
-        }}
-      >
-        {CategoryOptions.map(opt => (
-          <FormSelect.Option key={opt.value} {...opt}>
-            {opt.title}
-          </FormSelect.Option>
-        ))}
-      </FormSelect>
-      <Button type="primary" onClick={handelClick}>
-        查看数据 (in console)
-      </Button>
+        <FormSelect
+          label="分类"
+          model={todo}
+          path="category"
+          style={{
+            minWidth: '200px',
+          }}
+        >
+          {CategoryOptions.map(opt => (
+            <FormSelect.Option key={opt.value} {...opt}>
+              {opt.title}
+            </FormSelect.Option>
+          ))}
+        </FormSelect>
+        <Button type="primary" onClick={handelClick}>
+          查看数据 (in console)
+        </Button>
+      </FormContext>
     </div>
   );
 });

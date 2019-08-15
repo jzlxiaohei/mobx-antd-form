@@ -1,4 +1,4 @@
-import { ICommonInputProps } from '../types';
+import { ICommonInputProps } from './types';
 import get from 'lodash.get';
 import set from 'lodash.set';
 import { runInAction, isObservableProp } from 'mobx';
@@ -59,13 +59,14 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
       const lastPart = path.substring(lastIndex + 1);
       const finalModel = get(model, firstPart);
       if (!isObservableProp(finalModel, lastPart)) {
-        console.error(`nested value from ${props.path} is not observable. Maybe it works, but it is a potential bug`);
+        console.error(
+          `nested value from ${props.path} is not observable. Maybe it works, but it is a potential bug`,
+        );
       }
     }
   }
 
   const modelValue = getValue(props.model, props.path as any);
-
   const formValue = transformModelToView(modelValue, props);
   const inputProps = omitCommonProps(props);
   return {
