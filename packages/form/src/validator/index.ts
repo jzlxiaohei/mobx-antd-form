@@ -52,7 +52,8 @@ export default function buildValidator<M>(
   model: M,
   pathValidateFnMap: IPathValidateFnMap<M>,
 ): IValidator {
-  // validator 的字段
+  // validator 的字段是 @computed get 的方式，监听model字段
+  // 目前没找到好方法对其进行 iteration, 只能塞个字段记录所以的keys
   const __do_not_use_this_hidden_keys__ = [];
   const validateObject: IValidator = {};
   for (let path in pathValidateFnMap) {
