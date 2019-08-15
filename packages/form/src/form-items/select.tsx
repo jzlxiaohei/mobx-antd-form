@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Select } from 'antd';
 import formHoc, { IOriginProps } from './hoc';
-import { ICommonInputProps } from './utils/types';
+import { ICommonInputProps } from '../types';
 import { SelectValue } from 'antd/lib/select';
 
 interface F {

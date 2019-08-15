@@ -1,7 +1,7 @@
-import { ICommonInputProps } from './types';
 import get from 'lodash.get';
 import set from 'lodash.set';
 import { runInAction, isObservableProp } from 'mobx';
+import { ICommonInputProps } from '../../types';
 
 const ignoreFields = [
   'model',
@@ -13,6 +13,7 @@ const ignoreFields = [
   'transformModelToView',
   'label',
   'itemProps',
+  'validator',
   'noFormItem',
 ];
 
@@ -33,21 +34,23 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
   const transformViewToModel = props.transformViewToModel || identity;
   const getValue = props.getValue || get;
 
+  const { model, path } = props;
+
   function handleChange(changeValue: any) {
     const value = transformViewToModel(changeValue, props);
     if (props.onChange) {
       props.onChange({
         value,
-        model: props.model,
-        path: props.path,
+        model,
+        path,
       });
     } else {
-      runInAction(() => set(props.model, props.path, value));
+      runInAction(() => set(model, path, value));
     }
   }
 
+  // check value is observable
   if (process.env.NODE_ENV !== 'production') {
-    const { model, path } = props;
     const isNestedPropsPath = path.indexOf('.') !== -1;
     if (!isNestedPropsPath) {
       if (!isObservableProp(model, path)) {
@@ -66,11 +69,25 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
     }
   }
 
-  const modelValue = getValue(props.model, props.path as any);
+  const modelValue = getValue(model, path as any);
   const formValue = transformModelToView(modelValue, props);
   const inputProps = omitCommonProps(props);
+  const itemProps = props.itemProps
+    ? {
+        ...props.itemProps,
+      }
+    : {};
+
+  if (props.validator) {
+    const validator = props.validator;
+    const help = get(validator, path);
+    itemProps.help = help;
+    itemProps.validateStatus = help ? 'error' : undefined;
+  }
+
   return {
     ...props,
+    itemProps,
     inputProps,
     value: formValue,
     onChange: handleChange,
