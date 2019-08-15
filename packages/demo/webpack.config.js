@@ -39,11 +39,11 @@ module.exports = {
   devtool: 'source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
-    alias: isDev
-      ? {
-          'react-dom': '@hot-loader/react-dom',
-        }
-      : null,
+    // alias: isDev
+    //   ? {
+    //       'react-dom': '@hot-loader/react-dom',
+    //     }
+    //   : null,
   },
 
   module: {

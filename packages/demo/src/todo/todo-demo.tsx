@@ -7,6 +7,8 @@ import {
   FormDate,
   FormDateRange,
   FormContext,
+  buildValidator,
+  FormButton,
 } from '@jzl/m-form/src';
 import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
@@ -44,19 +46,27 @@ export const GiveUpOptions = [
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 8 },
+    sm: { span: 6 },
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 16 },
+    sm: { span: 18 },
   },
 };
 
 const todo = new Todo();
-const todo1 = new Todo();
 // for watching value in console;
 (window as any).todo = todo;
-(window as any).todo1 = todo1;
+
+const validator = buildValidator(todo, {
+  name: (value: string, model) =>
+    value === 'in' && model.done ? 'invalid' : undefined,
+  'nested.name': (value: any) => {
+    return value === 'in' ? 'invalid' : undefined;
+  },
+});
+
+(window as any).validator = validator;
 
 export default observer(function TodoDemo() {
   function handelClick() {
@@ -64,22 +74,16 @@ export default observer(function TodoDemo() {
   }
   return (
     <div className="todo-demo">
-      <FormContext model={todo1}>
+      <FormContext
+        model={todo}
+        validator={validator}
+        itemProps={formItemLayout}
+      >
         <FormInput
-          itemProps={formItemLayout}
           className="input-class"
           label="name"
           path="name"
-          placeholder="todo title"
-        />
-      </FormContext>
-      <FormContext model={todo}>
-        <FormInput
-          itemProps={formItemLayout}
-          className="input-class"
-          label="name"
-          path="name"
-          placeholder="todo title"
+          placeholder="输入`in`并勾选done，有错误提示"
         />
         <FormInput label="嵌套属性" path="nested.name" />
         <FormCheckbox label="done" path="done" />
@@ -100,11 +104,7 @@ export default observer(function TodoDemo() {
                 {opt.title}
                 {todo.giveUpReason === GiveUpReason.OtherReason &&
                   opt.value === GiveUpReason.OtherReason && (
-                    <FormInput
-                      noFormItem
-                      model={todo}
-                      path="otherGiveUpReasonText"
-                    />
+                    <FormInput model={todo} path="otherGiveUpReasonText" />
                   )}
               </FormRadioGroup.Radio>
             );
@@ -141,7 +141,9 @@ export default observer(function TodoDemo() {
             </FormSelect.Option>
           ))}
         </FormSelect>
-        <Button type="primary" onClick={handelClick}>
+        <FormButton type="primary">Submit</FormButton>
+        <br />
+        <Button type="primary" style={{ marginTop: 20 }} onClick={handelClick}>
           查看数据 (in console)
         </Button>
       </FormContext>
