@@ -14,7 +14,7 @@ import {
 import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
 import { Button } from 'antd';
-import { toJS, observable } from 'mobx';
+import { toJS } from 'mobx';
 import './index.less';
 
 export const PriorityOptions = [
@@ -75,7 +75,7 @@ const validator = buildValidator(todo, {
   },
   family: value => {
     if (!value.length) {
-      return 'require at least one family';
+      return 'require at least one family member';
     }
     return;
   },

@@ -16,6 +16,9 @@ function FormDate(props: IOriginProps) {
 }
 
 FormDate.transformModelToView = function(timestamp: number, props: IProps) {
+  if (!timestamp) {
+    return undefined;
+  }
   if (props.unix) {
     return moment(timestamp * 1000);
   }
@@ -24,6 +27,9 @@ FormDate.transformModelToView = function(timestamp: number, props: IProps) {
 };
 
 FormDate.transformViewToModel = function(momentInst: Moment, props: IProps) {
+  if (!momentInst) {
+    return undefined;
+  }
   if (props.unix) {
     return momentInst.unix();
   }

@@ -27,7 +27,7 @@ export class Todo {
   @observable category = TodoCategory.Life;
   @observable giveUpReason = GiveUpReason.NoNeed;
   @observable otherGiveUpReasonText = '';
-  @observable createDate = new Date().getTime();
+  @observable createDate: number = undefined;
   @observable createDateUnix = new Date().getTime() / 1000;
   @observable dateRange: number[] = [];
   @observable nested = {
