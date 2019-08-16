@@ -19,6 +19,8 @@ export enum GiveUpReason {
 }
 
 export class Todo {
+  @observable fetchList: string[] = [];
+
   @observable name = '';
   @observable done = false;
   @observable priority: TodoPriority = undefined;
@@ -31,4 +33,6 @@ export class Todo {
   @observable nested = {
     name: 'error',
   };
+
+  @observable family: string[] = [];
 }

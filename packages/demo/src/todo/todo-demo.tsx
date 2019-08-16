@@ -9,11 +9,12 @@ import {
   FormContext,
   buildValidator,
   FormButton,
+  FormWrapper,
 } from '@jzl/m-form/src';
 import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
 import { Button } from 'antd';
-import { toJS } from 'mobx';
+import { toJS, observable } from 'mobx';
 import './index.less';
 
 export const PriorityOptions = [
@@ -58,23 +59,43 @@ const todo = new Todo();
 // for watching value in console;
 (window as any).todo = todo;
 
+setTimeout(() => {
+  todo.fetchList.push('test');
+}, 1000);
+
 const validator = buildValidator(todo, {
-  name: (value: string, model) =>
-    value === 'error' && model.done ? 'invalid' : undefined,
+  name: (value: string, model) => {
+    if (model.fetchList.length === 0) {
+      return 'fetching list.';
+    }
+    return value === 'error' && model.done ? 'invalid' : undefined;
+  },
   'nested.name': (value: any) => {
     return value === 'error' ? 'invalid' : undefined;
+  },
+  family: value => {
+    if (!value.length) {
+      return 'require at least one family';
+    }
+    return;
   },
 });
 
 (window as any).validator = validator;
 
 export default observer(function TodoDemo() {
-  function handelClick() {
+  function handelAddFamily() {
+    todo.family.push('');
+  }
+
+  function handleSubmit(e: Event) {
+    e.preventDefault();
     console.log(toJS(todo));
   }
   return (
     <div className="todo-demo">
       <FormContext
+        onSubmit={handleSubmit}
         model={todo}
         validator={validator}
         itemProps={formItemLayout}
@@ -141,11 +162,16 @@ export default observer(function TodoDemo() {
             </FormSelect.Option>
           ))}
         </FormSelect>
-        <FormButton type="primary">Submit</FormButton>
-        <br />
-        <Button type="primary" style={{ marginTop: 20 }} onClick={handelClick}>
-          查看数据 (in console)
-        </Button>
+        <FormWrapper label="家庭成员" path="family">
+          {todo.family.map((f, index) => (
+            <FormInput key={index} model={todo.family} path={`${index}`} />
+          ))}
+          <Button onClick={handelAddFamily}>添加</Button>
+        </FormWrapper>
+
+        <FormButton htmlType="submit" type="primary">
+          Submit (Data in Console)
+        </FormButton>
       </FormContext>
     </div>
   );
