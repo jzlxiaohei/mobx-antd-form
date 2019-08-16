@@ -3,7 +3,6 @@ import { Button } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
 import { Observer } from 'mobx-react';
 import { FormContext } from '../form/form-context';
-import { isValid } from '../validator';
 
 export default function FormButton(props: ButtonProps) {
   return (
@@ -12,7 +11,7 @@ export default function FormButton(props: ButtonProps) {
         <Observer>
           {() => {
             const validator = contextValue.validator;
-            return <Button disabled={!isValid(validator)} {...props} />;
+            return <Button disabled={!validator.isValid()} {...props} />;
           }}
         </Observer>
       )}

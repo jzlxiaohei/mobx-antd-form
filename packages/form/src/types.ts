@@ -1,5 +1,5 @@
 import { FormItemProps } from 'antd/lib/form/FormItem';
-import { ValidateFn, IValidator } from './validator';
+import { Validator } from './validator';
 
 export interface IChangeParam<M, T> {
   value: any;
@@ -18,6 +18,6 @@ export interface ICommonInputProps<M> {
   label?: string;
   itemProps?: FormItemProps;
   noFormItem?: boolean;
-  validator?: IValidator;
+  validator?: Validator<M>;
   [x: string]: any;
 }

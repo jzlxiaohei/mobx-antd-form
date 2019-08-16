@@ -8,4 +8,4 @@ export { default as FormButton } from './form-items/button';
 
 export { default as FormContext } from './form/form-context';
 
-export { default as buildValidator, isValid } from './validator';
+export { default as buildValidator } from './validator';
