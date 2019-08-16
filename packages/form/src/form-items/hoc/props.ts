@@ -1,6 +1,11 @@
 import get from 'lodash.get';
 import set from 'lodash.set';
-import { runInAction, isObservableProp } from 'mobx';
+import {
+  runInAction,
+  isObservableProp,
+  isObservable,
+  isObservableObject,
+} from 'mobx';
 import { ICommonInputProps } from '../../types';
 
 const ignoreFields = [
@@ -51,9 +56,12 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
 
   // check value is observable
   if (process.env.NODE_ENV !== 'production') {
+    if (!isObservable(model)) {
+      console.error(`${model} is not observable`);
+    }
     const isNestedPropsPath = path.indexOf('.') !== -1;
     if (!isNestedPropsPath) {
-      if (!isObservableProp(model, path)) {
+      if (isObservableObject(model) && !isObservableProp(model, path)) {
         console.error(`value from ${props.path} is not observable`);
       }
     } else {
@@ -61,7 +69,10 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
       const firstPart = path.substring(0, lastIndex);
       const lastPart = path.substring(lastIndex + 1);
       const finalModel = get(model, firstPart);
-      if (!isObservableProp(finalModel, lastPart)) {
+      if (
+        isObservableObject(finalModel) &&
+        !isObservableProp(finalModel, lastPart)
+      ) {
         console.error(
           `nested value from ${props.path} is not observable. Maybe it works, but it is a potential bug`,
         );
@@ -80,7 +91,7 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
 
   if (props.validator) {
     const validator = props.validator;
-    const help = get(validator, path);
+    const help = validator.getValidStringByPath(path);
     itemProps.help = help;
     itemProps.validateStatus = help ? 'error' : undefined;
   }
