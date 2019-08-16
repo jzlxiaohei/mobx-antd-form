@@ -29,6 +29,6 @@ export class Todo {
   @observable createDateUnix = new Date().getTime() / 1000;
   @observable dateRange: number[] = [];
   @observable nested = {
-    name: 'nested field',
+    name: 'error',
   };
 }

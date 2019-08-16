@@ -60,9 +60,9 @@ const todo = new Todo();
 
 const validator = buildValidator(todo, {
   name: (value: string, model) =>
-    value === 'in' && model.done ? 'invalid' : undefined,
+    value === 'error' && model.done ? 'invalid' : undefined,
   'nested.name': (value: any) => {
-    return value === 'in' ? 'invalid' : undefined;
+    return value === 'error' ? 'invalid' : undefined;
   },
 });
 
@@ -83,7 +83,7 @@ export default observer(function TodoDemo() {
           className="input-class"
           label="name"
           path="name"
-          placeholder="输入`in`并勾选done，有错误提示"
+          placeholder="输入`error`并勾选done，有错误提示"
         />
         <FormInput label="嵌套属性" path="nested.name" />
         <FormCheckbox label="done" path="done" />
