@@ -26,6 +26,9 @@ function fetch() {
 }
 
 export class Todo {
+  constructor() {
+    console.log('todo');
+  }
   fetchAction = new AsyncAction(fetch);
 
   @observable fetchList: string[] = [];

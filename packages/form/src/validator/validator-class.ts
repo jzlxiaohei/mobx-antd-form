@@ -1,4 +1,4 @@
-import { extendObservable } from 'mobx';
+import { extendObservable, computed } from 'mobx';
 import get from 'lodash/get';
 
 export type ValidateFn<M> = (value: any, model: M) => string | void;
@@ -49,44 +49,50 @@ function validate<M>(
 }
 
 export default class Validator<M> {
-  modelWatched: M = null;
-
   constructor(modelWatched: M, pathValidateFnMap: IPathValidateFnMap<M>) {
     this.modelWatched = modelWatched;
-    this._initRules(pathValidateFnMap);
+    this.initRules(pathValidateFnMap);
   }
 
-  private _validatorObject: IValidator = null;
+  private modelWatched: M = null;
+
+  private _validatorCache: IValidator = null;
 
   private validateKeys: string[] = [];
 
-  // private rules: IPathValidateFnMap<M> = null;
+  private rules: IPathValidateFnMap<M> = null;
 
-  private _initRules(rules: IPathValidateFnMap<M>) {
-    this._validatorObject = {};
+  private initRules(rules: IPathValidateFnMap<M>) {
+    this._validatorCache = {};
+    this.rules = rules;
+    this.buildRules();
+  }
+
+  private buildRules() {
+    const { modelWatched, _validatorCache } = this;
+    const rules = this.rules;
     for (let path in rules) {
       if (rules.hasOwnProperty(path)) {
         const validateFns = rules[path];
-        addValidatorForSingleField(
-          validateFns,
-          this._validatorObject,
-          path,
-          this.modelWatched,
-        );
+        extendObservable(_validatorCache, {
+          get [path]() {
+            return validate(validateFns, path, modelWatched);
+          },
+        });
         this.validateKeys.push(path);
       }
     }
   }
 
   getValidStringByPath(path: string) {
-    return get(this._validatorObject, path);
+    return get(this._validatorCache, path);
   }
 
   isValid() {
     const validateKeys = this.validateKeys;
     for (let i = 0; i < validateKeys.length; i++) {
       const path = validateKeys[i];
-      const vResult = get(this._validatorObject, path);
+      const vResult = get(this._validatorCache, path);
       if (isString(vResult)) {
         return false;
       }

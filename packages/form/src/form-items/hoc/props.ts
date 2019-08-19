@@ -20,6 +20,7 @@ const ignoreFields = [
   'itemProps',
   'validator',
   'noFormItem',
+  'needValidate',
 ];
 
 export function omitCommonProps(props: any) {
@@ -89,7 +90,7 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
       }
     : {};
 
-  if (props.validator) {
+  if (props.validator && props.needValidate) {
     const validator = props.validator;
     const help = validator.getValidStringByPath(path);
     itemProps.help = help;

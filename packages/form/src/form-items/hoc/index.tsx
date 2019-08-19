@@ -30,6 +30,7 @@ export default function(OriginComponent: React.ElementType) {
                 model: contextValue.model,
                 validator: contextValue.validator,
                 itemProps: contextValue.itemProps,
+                needValidate: contextValue.needValidate,
               };
               const props = getFormProps({
                 ...defaultProps,

@@ -19,5 +19,6 @@ export interface ICommonInputProps<M> {
   itemProps?: FormItemProps;
   noFormItem?: boolean;
   validator?: Validator<M>;
+  needValidate?: boolean;
   [x: string]: any;
 }

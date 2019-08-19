@@ -1,25 +1,41 @@
 import * as React from 'react';
 import { Validator } from '../validator';
 
-interface IProps<M> {
+interface IContextProps<M> {
   validator?: Validator<M>;
   model: M;
   itemProps?: any;
+  needValidate?: boolean;
   // children: React.ReactElement | React.ReactElement[];
   [x: string]: any;
 }
 
-export const FormContext = React.createContext<IProps<any>>({
+interface IProps<M> extends IContextProps<M> {
+  validateAtFirst?: boolean;
+}
+
+export const FormContext = React.createContext<IContextProps<any>>({
   model: null,
   validator: null,
+  needValidate: false,
   itemProps: null,
 });
 
 export default function FormWithContext<M extends Object>(props: IProps<M>) {
-  const { model, validator, itemProps, ...otherProps } = props;
+  const { model, validator, itemProps, validateAtFirst, ...otherProps } = props;
+  const [needValidate, setNeedValidate] = React.useState(validateAtFirst);
+
+  function handleSubmit(e: React.FormEvent) {
+    if (!needValidate) {
+      setNeedValidate(true);
+    }
+    if (otherProps.onSubmit) {
+      otherProps.onSubmit(e);
+    }
+  }
   return (
-    <FormContext.Provider value={{ model, validator, itemProps }}>
-      <form {...otherProps} />
+    <FormContext.Provider value={{ model, validator, itemProps, needValidate }}>
+      <form {...otherProps} onSubmit={e => handleSubmit(e)} />
     </FormContext.Provider>
   );
 }

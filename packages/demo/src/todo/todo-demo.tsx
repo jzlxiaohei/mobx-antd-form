@@ -15,6 +15,8 @@ import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
 import { Button } from 'antd';
 import { toJS } from 'mobx';
+import useInstance from './use-instance';
+
 import './index.less';
 
 export const PriorityOptions = [
@@ -55,14 +57,6 @@ const formItemLayout = {
   },
 };
 
-// const todo = new Todo();
-// // for watching value in console;
-// (window as any).todo = todo;
-
-// setTimeout(() => {
-//   todo.fetchList.push('test');
-// }, 1000);
-
 function addValidator(todo: Todo) {
   return buildValidator(todo, {
     name: (value: string, model) => {
@@ -83,8 +77,8 @@ function addValidator(todo: Todo) {
 // (window as any).validator = validator;
 
 export default observer(function TodoDemo() {
-  const todo = React.useRef<Todo>(new Todo()).current;
-  const validator = addValidator(todo);
+  const todo = useInstance(() => new Todo());
+  const validator = useInstance(() => addValidator(todo));
 
   function handelAddFamily() {
     todo.family.push('');
@@ -102,6 +96,7 @@ export default observer(function TodoDemo() {
         model={todo}
         validator={validator}
         itemProps={formItemLayout}
+        validateAtFirst
       >
         <FormInput
           className="input-class"

@@ -11,7 +11,17 @@ export default function FormButton(props: ButtonProps) {
         <Observer>
           {() => {
             const validator = contextValue.validator;
-            return <Button disabled={!validator.isValid()} {...props} />;
+            return (
+              <Button
+                disabled={contextValue.needValidate && !validator.isValid()}
+                {...props}
+                onClick={e => {
+                  if (props.onClick) {
+                    props.onClick(e);
+                  }
+                }}
+              />
+            );
           }}
         </Observer>
       )}
