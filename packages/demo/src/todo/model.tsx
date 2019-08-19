@@ -1,4 +1,5 @@
 import { observable } from 'mobx';
+import { AsyncAction } from './async';
 
 export enum TodoPriority {
   Low,
@@ -18,7 +19,15 @@ export enum GiveUpReason {
   OtherReason,
 }
 
+function fetch() {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, 1000);
+  });
+}
+
 export class Todo {
+  fetchAction = new AsyncAction(fetch);
+
   @observable fetchList: string[] = [];
 
   @observable name = '';

@@ -55,41 +55,44 @@ const formItemLayout = {
   },
 };
 
-const todo = new Todo();
-// for watching value in console;
-(window as any).todo = todo;
+// const todo = new Todo();
+// // for watching value in console;
+// (window as any).todo = todo;
 
-setTimeout(() => {
-  todo.fetchList.push('test');
-}, 1000);
+// setTimeout(() => {
+//   todo.fetchList.push('test');
+// }, 1000);
 
-const validator = buildValidator(todo, {
-  name: (value: string, model) => {
-    if (model.fetchList.length === 0) {
-      return 'fetching list.';
-    }
-    return value === 'error' && model.done ? 'invalid' : undefined;
-  },
-  'nested.name': (value: any) => {
-    return value === 'error' ? 'invalid' : undefined;
-  },
-  family: value => {
-    if (!value.length) {
-      return 'require at least one family member';
-    }
-    return;
-  },
-});
+function addValidator(todo: Todo) {
+  return buildValidator(todo, {
+    name: (value: string, model) => {
+      return value === 'error' && model.done ? 'invalid' : undefined;
+    },
+    'nested.name': (value: any) => {
+      return value === 'error' ? 'invalid' : undefined;
+    },
+    family: value => {
+      if (!value.length) {
+        return 'require at least one family member';
+      }
+      return;
+    },
+  });
+}
 
-(window as any).validator = validator;
+// (window as any).validator = validator;
 
 export default observer(function TodoDemo() {
+  const todo = React.useRef<Todo>(new Todo()).current;
+  const validator = addValidator(todo);
+
   function handelAddFamily() {
     todo.family.push('');
   }
 
   function handleSubmit(e: Event) {
     e.preventDefault();
+    todo.fetchAction.run();
     console.log(toJS(todo));
   }
   return (
@@ -169,7 +172,11 @@ export default observer(function TodoDemo() {
           <Button onClick={handelAddFamily}>添加</Button>
         </FormWrapper>
 
-        <FormButton htmlType="submit" type="primary">
+        <FormButton
+          htmlType="submit"
+          type="primary"
+          loading={todo.fetchAction.loading}
+        >
           Submit (Data in Console)
         </FormButton>
       </FormContext>
