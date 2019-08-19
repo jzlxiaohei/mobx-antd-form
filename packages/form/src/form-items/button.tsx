@@ -13,13 +13,11 @@ export default function FormButton(props: ButtonProps) {
             const validator = contextValue.validator;
             return (
               <Button
-                disabled={contextValue.needValidate && !validator.isValid()}
+                disabled={
+                  validator && contextValue.needValidate && !validator.isValid()
+                }
                 {...props}
-                onClick={e => {
-                  if (props.onClick) {
-                    props.onClick(e);
-                  }
-                }}
+                htmlType="submit"
               />
             );
           }}

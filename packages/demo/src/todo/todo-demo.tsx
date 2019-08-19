@@ -74,8 +74,6 @@ function addValidator(todo: Todo) {
   });
 }
 
-// (window as any).validator = validator;
-
 export default observer(function TodoDemo() {
   const todo = useInstance(() => new Todo());
   const validator = useInstance(() => addValidator(todo));
@@ -85,7 +83,6 @@ export default observer(function TodoDemo() {
   }
 
   function handleSubmit(e: Event) {
-    e.preventDefault();
     todo.fetchAction.run();
     console.log(toJS(todo));
   }
@@ -96,7 +93,7 @@ export default observer(function TodoDemo() {
         model={todo}
         validator={validator}
         itemProps={formItemLayout}
-        validateAtFirst
+        // validateAtFirst
       >
         <FormInput
           className="input-class"
@@ -167,11 +164,7 @@ export default observer(function TodoDemo() {
           <Button onClick={handelAddFamily}>添加</Button>
         </FormWrapper>
 
-        <FormButton
-          htmlType="submit"
-          type="primary"
-          loading={todo.fetchAction.loading}
-        >
+        <FormButton type="primary" loading={todo.fetchAction.loading}>
           Submit (Data in Console)
         </FormButton>
       </FormContext>

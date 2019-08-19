@@ -26,10 +26,13 @@ export default function FormWithContext<M extends Object>(props: IProps<M>) {
   const [needValidate, setNeedValidate] = React.useState(validateAtFirst);
 
   function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
     if (!needValidate) {
       setNeedValidate(true);
     }
-    if (otherProps.onSubmit) {
+    let isValid = validator ? validator.isValid() : true;
+
+    if (otherProps.onSubmit && isValid) {
       otherProps.onSubmit(e);
     }
   }
