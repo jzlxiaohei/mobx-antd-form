@@ -16,8 +16,8 @@ export default function FormButton(props: ButtonProps) {
                 disabled={
                   validator && contextValue.needValidate && !validator.isValid()
                 }
-                {...props}
                 htmlType="submit"
+                {...props}
               />
             );
           }}
