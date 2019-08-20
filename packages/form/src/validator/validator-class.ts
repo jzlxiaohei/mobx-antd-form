@@ -65,6 +65,7 @@ export default class Validator<M> {
   private initRules(rules: IPathValidateFnMap<M>) {
     this._validatorCache = {};
     this.rules = rules;
+    this.validateKeys = [];
     this.buildRules();
   }
 
@@ -79,6 +80,8 @@ export default class Validator<M> {
             return validate(validateFns, path, modelWatched);
           },
         });
+        // validator 的字段是 @computed get 的方式，监听model字段
+        // 目前没找到好方法对其进行 iteration, 只能塞个字段记录所有的keys
         this.validateKeys.push(path);
       }
     }
