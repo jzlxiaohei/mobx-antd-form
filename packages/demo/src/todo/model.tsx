@@ -33,6 +33,7 @@ export class Todo {
 
   @observable fetchList: string[] = [];
 
+  @observable number = 0;
   @observable name = '';
   @observable done = false;
   @observable priority: TodoPriority = undefined;

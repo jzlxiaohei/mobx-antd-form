@@ -49,6 +49,9 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
         value,
         model,
         path,
+        defaultChangeFn() {
+          runInAction(() => set(model, path, value));
+        },
       });
     } else {
       runInAction(() => set(model, path, value));
