@@ -7,7 +7,6 @@ import {
   FormDate,
   FormDateRange,
   FormContext,
-  buildValidator,
   FormButton,
   FormWrapper,
   FormInputNumber,
@@ -59,32 +58,31 @@ const formItemLayout = {
   },
 };
 
-function addValidator(todo: Todo) {
-  return buildValidator(todo, {
-    name: (value: string, model) => {
-      return value === 'error' && model.done ? 'invalid' : undefined;
-    },
-    'nested.name': (value: any) => {
-      return value === 'error' ? 'invalid' : undefined;
-    },
-    family: value => {
-      if (!value.length) {
-        return 'require at least one family member';
-      }
-      return;
-    },
-  });
-}
+// function addValidator() {
+//   return {
+//     name: (value: string, model: Todo) => {
+//       return value === 'error' && model.done ? 'invalid' : undefined;
+//     },
+//     'nested.name': (value: any) => {
+//       return value === 'error' ? 'invalid' : undefined;
+//     },
+//     family: value => {
+//       if (!value.length) {
+//         return 'require at least one family member';
+//       }
+//       return;
+//     },
+//   };
+// }
 
 export default observer(function TodoDemo() {
   const todo = useInstance(() => new Todo());
-  const validator = useInstance(() => addValidator(todo));
 
   function handelAddFamily() {
     todo.family.push('');
   }
 
-  function handleSubmit(e: Event) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     todo.fetchAction.run();
     console.log(toJS(todo));
   }
@@ -101,20 +99,22 @@ export default observer(function TodoDemo() {
       <FormContext
         onSubmit={handleSubmit}
         model={todo}
-        validator={validator}
         itemProps={formItemLayout}
-        // validateAtFirst
       >
         <FormInputNumber
           label="number"
-          path="name"
+          path="number"
           onChange={handleInputChange}
         />
-
         <FormInput
           className="input-class"
           label="name"
           path="name"
+          ruleFn={(value, model: Todo) => {
+            const result =
+              value === 'error' && model.done ? 'invalid' : undefined;
+            return result;
+          }}
           placeholder="输入`error`并勾选done，有错误提示"
         />
         <FormInput label="嵌套属性" path="nested.name" />

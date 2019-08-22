@@ -8,11 +8,11 @@ class App extends React.Component {
   render() {
     return (
       <Tabs>
-        <Tabs.TabPane tab="model class" key="1">
-          <TodoDemo />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="model object" key="2">
+        <Tabs.TabPane tab="model object" key="1">
           <TodoLocalStore />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="model class" key="2">
+          <TodoDemo />
         </Tabs.TabPane>
       </Tabs>
     );

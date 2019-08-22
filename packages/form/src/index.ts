@@ -9,6 +9,4 @@ export { default as FormInputNumber } from './form-items/input-number';
 
 export { default as FormWrapper } from './form-items/form-wrapper';
 
-export { default as FormContext } from './form/form-context';
-
-export { default as buildValidator, Validator } from './validator';
+export { default as FormContext } from './form-context';

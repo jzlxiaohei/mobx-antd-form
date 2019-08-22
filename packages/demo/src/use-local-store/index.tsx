@@ -2,17 +2,9 @@ import * as React from 'react';
 import {
   FormInput,
   FormCheckbox,
-  FormSelect,
-  FormRadioGroup,
-  FormDate,
-  FormDateRange,
   FormContext,
-  buildValidator,
   FormButton,
-  FormWrapper,
-  FormInputNumber,
 } from '@jzl/m-form/src';
-import { IChangeParam } from '@jzl/m-form/src/types';
 import { observer, useLocalStore } from 'mobx-react';
 import { Button } from 'antd';
 import { toJS } from 'mobx';
@@ -63,14 +55,6 @@ function createTodos() {
   };
 }
 
-function addValidator(todo: ITodo) {
-  return buildValidator(todo, {
-    text: (value: string) => {
-      return value ? undefined : 'required';
-    },
-  });
-}
-
 export default observer(function TodoDemo() {
   const store = useLocalStore(createTodos);
   function handleClick() {
@@ -86,15 +70,22 @@ export default observer(function TodoDemo() {
           {store.doneNumber} / {store.total}
         </div>
       }
-      {store.todos.map(todo => {
-        const validator = addValidator(todo);
-        return (
-          <FormContext key={todo.id} validator={validator} validateAtFirst>
-            <FormInput label="text" model={todo} path="text" />
-            <FormCheckbox label="done" model={todo} path="done" />
-          </FormContext>
-        );
-      })}
+      <FormContext validateAtFirst itemProps={formItemLayout}>
+        {store.todos.map(todo => {
+          return (
+            <React.Fragment key={todo.id}>
+              <FormInput
+                label="text"
+                model={todo}
+                path="text"
+                ruleFn={value => (!value ? 'required' : null)}
+              />
+              <FormCheckbox label="done" model={todo} path="done" />
+            </React.Fragment>
+          );
+        })}
+        <FormButton>Submit</FormButton>
+      </FormContext>
       <Button onClick={handleClick}>添加todo</Button> <br />
       <Button onClick={handleConsole}>console store</Button>
     </div>
