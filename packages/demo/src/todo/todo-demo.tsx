@@ -80,8 +80,6 @@ export default observer(function TodoDemo() {
   const todo = useInstance(() => new Todo());
   const validator = useInstance(() => addValidator(todo));
 
-  const [value, setValue] = React.useState('');
-
   function handelAddFamily() {
     todo.family.push('');
   }
@@ -92,23 +90,14 @@ export default observer(function TodoDemo() {
   }
 
   function handleInputChange(param: IChangeParam<Todo>) {
-    console.log(param.value);
     if (param.value > 59) {
       return;
     }
     param.defaultChangeFn();
   }
 
-  function handleValueChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.value === 'xx') {
-      return;
-    }
-    setValue(e.target.value);
-  }
-
   return (
     <div className="todo-demo">
-      <input value={value} onChange={handleValueChange}></input>
       <FormContext
         onSubmit={handleSubmit}
         model={todo}

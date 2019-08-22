@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, extendObservable } from 'mobx';
 import { AsyncAction } from './async';
 
 export enum TodoPriority {
@@ -27,12 +27,27 @@ function fetch() {
 
 export class Todo {
   constructor() {
-    console.log('todo');
+    // extendObservable(this, {
+    //   fetchList: [] as string[],
+    //   number: 0,
+    //   name: '',
+    //   done: false,
+    //   priority: undefined as TodoPriority,
+    //   category: TodoCategory.Life,
+    //   giveUpReason: GiveUpReason.NoNeed,
+    //   otherGiveUpReasonText: '',
+    //   createDate: undefined as number,
+    //   createDateUnix: new Date().getTime() / 1000,
+    //   dateRange: [] as number[],
+    //   nested: {
+    //     name: 'error',
+    //   },
+    //   family: [] as string[],
+    // });`
   }
   fetchAction = new AsyncAction(fetch);
 
   @observable fetchList: string[] = [];
-
   @observable number = 0;
   @observable name = '';
   @observable done = false;
@@ -46,6 +61,5 @@ export class Todo {
   @observable nested = {
     name: 'error',
   };
-
   @observable family: string[] = [];
 }

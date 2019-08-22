@@ -3,7 +3,7 @@ import { Validator } from '../validator';
 
 interface IContextProps<M> {
   validator?: Validator<M>;
-  model: M;
+  model?: M;
   itemProps?: any;
   needValidate?: boolean;
   // children: React.ReactElement | React.ReactElement[];

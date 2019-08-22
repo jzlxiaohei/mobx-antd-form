@@ -1,10 +1,21 @@
 import * as React from 'react';
 import './styles/index.less';
 import TodoDemo from './todo/todo-demo';
+import TodoLocalStore from './use-local-store';
+import { Tabs } from 'antd';
 
 class App extends React.Component {
   render() {
-    return <TodoDemo />;
+    return (
+      <Tabs>
+        <Tabs.TabPane tab="model class" key="1">
+          <TodoDemo />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="model object" key="2">
+          <TodoLocalStore />
+        </Tabs.TabPane>
+      </Tabs>
+    );
   }
 }
 
