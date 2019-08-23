@@ -39,7 +39,7 @@ export default observer(function TodoDemo() {
           {store.doneNumber} / {store.total}
         </div>
       }
-      <FormContext validateAtFirst itemProps={formItemLayout}>
+      <FormContext itemProps={formItemLayout}>
         {store.todos.map(todo => {
           return (
             <React.Fragment key={todo.id}>

@@ -41,7 +41,7 @@ export default function FormWithContext<M extends Object>(
       setNeedValidate(true);
     }
 
-    let isValid = validateInfoManager.isValid();
+    let isValid = validateInfoManager.isValid;
     if (otherProps.onSubmit && isValid) {
       otherProps.onSubmit(e);
     }

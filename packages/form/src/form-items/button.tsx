@@ -10,12 +10,12 @@ export default function FormButton(props: ButtonProps) {
       {contextValue => (
         <Observer>
           {() => {
+            let buttonDisabled = false;
+            if (contextValue.needValidate) {
+              buttonDisabled = !contextValue.validateInfoManager.isValid;
+            }
             return (
-              <Button
-                disabled={!contextValue.validateInfoManager.isValid()}
-                htmlType="submit"
-                {...props}
-              />
+              <Button disabled={buttonDisabled} htmlType="submit" {...props} />
             );
           }}
         </Observer>
