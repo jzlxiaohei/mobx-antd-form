@@ -16,7 +16,7 @@ import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
 import { Button } from 'antd';
 import { toJS } from 'mobx';
-import useInstance from './use-instance';
+import useInstance from '../use-instance';
 
 import './index.less';
 
@@ -57,23 +57,6 @@ const formItemLayout = {
     sm: { span: 18 },
   },
 };
-
-// function addValidator() {
-//   return {
-//     name: (value: string, model: Todo) => {
-//       return value === 'error' && model.done ? 'invalid' : undefined;
-//     },
-//     'nested.name': (value: any) => {
-//       return value === 'error' ? 'invalid' : undefined;
-//     },
-//     family: value => {
-//       if (!value.length) {
-//         return 'require at least one family member';
-//       }
-//       return;
-//     },
-//   };
-// }
 
 export default observer(function TodoDemo() {
   const todo = useInstance(() => new Todo());

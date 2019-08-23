@@ -13,6 +13,7 @@ module.exports = function babelConfig(api) {
       '@babel/preset-typescript',
     ],
     plugins: [
+      ['@babel/transform-runtime'],
       ['import', { libraryName: 'antd', style: 'css' }, 'antd'],
       '@babel/plugin-syntax-dynamic-import',
       [

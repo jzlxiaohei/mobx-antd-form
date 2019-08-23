@@ -8,6 +8,7 @@ import {
 import { observer, useLocalStore } from 'mobx-react';
 import { Button } from 'antd';
 import { toJS } from 'mobx';
+import { create } from './model';
 
 const formItemLayout = {
   labelCol: {
@@ -20,43 +21,11 @@ const formItemLayout = {
   },
 };
 
-let idIndex = 0;
-
-type ITodo = {
-  id: string;
-  text: string;
-  done: boolean;
-  toggleDone: () => void;
-};
-
-function createTodo() {
-  return {
-    id: `${idIndex++}`,
-    text: '',
-    done: false,
-    toggleDone() {
-      this.done = !this.done;
-    },
-  } as ITodo;
-}
-
-function createTodos() {
-  return {
-    todos: [] as ITodo[],
-    addTodo() {
-      this.todos.push(createTodo());
-    },
-    get total() {
-      return this.todos.length;
-    },
-    get doneNumber() {
-      return this.todos.filter((todo: ITodo) => todo.done).length;
-    },
-  };
-}
-
 export default observer(function TodoDemo() {
-  const store = useLocalStore(createTodos);
+  const store = useLocalStore(create);
+  React.useEffect(() => {
+    store.fetchAction.run();
+  }, []);
   function handleClick() {
     store.addTodo();
   }
@@ -84,7 +53,7 @@ export default observer(function TodoDemo() {
             </React.Fragment>
           );
         })}
-        <FormButton>Submit</FormButton>
+        <FormButton loading={store.fetchAction.loading}>Submit</FormButton>
       </FormContext>
       <Button onClick={handleClick}>添加todo</Button> <br />
       <Button onClick={handleConsole}>console store</Button>
