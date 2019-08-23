@@ -60,6 +60,9 @@ const formItemLayout = {
 
 export default observer(function TodoDemo() {
   const todo = useInstance(() => new Todo());
+  React.useEffect(() => {
+    console.log('todo name');
+  }, [todo.name]);
 
   function handelAddFamily() {
     todo.family.push('');

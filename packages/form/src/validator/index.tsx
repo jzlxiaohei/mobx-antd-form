@@ -1,4 +1,4 @@
-import { isString } from '../utils';
+import { validateHasError } from '../utils';
 import { observable } from 'mobx';
 
 class ValidateInfo {
@@ -6,7 +6,7 @@ class ValidateInfo {
   info: Record<string, string | void> = {};
   isValid() {
     for (let key in this.info) {
-      if (isString(this.info[key])) {
+      if (validateHasError(this.info[key]).error) {
         return false;
       }
     }

@@ -7,7 +7,7 @@ import {
   isObservableObject,
 } from 'mobx';
 import { ICommonInputProps } from '../../types';
-import { isString } from '../../utils';
+import { validateHasError } from '../../utils';
 
 const ignoreFields = [
   'model',
@@ -99,8 +99,9 @@ export function getFormProps<M extends Object>(props: ICommonInputProps<M>) {
     const help = props.ruleFn(modelValue, model);
     props.validateInfoManager.setValidateInfo(model, path, help);
     if (props.needValidate) {
-      if (isString(help)) {
-        itemProps.help = help as string;
+      const checkResult = validateHasError(help);
+      if (checkResult.error) {
+        itemProps.help = checkResult.message;
         itemProps.validateStatus = 'error';
       }
     }
