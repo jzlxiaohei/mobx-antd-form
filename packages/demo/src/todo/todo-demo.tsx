@@ -10,7 +10,10 @@ import {
   FormButton,
   FormWrapper,
   FormInputNumber,
+  IFormComponentProps,
+  FormItemHoc,
 } from '@jzl/m-form/src';
+import { SketchPicker, ColorResult } from 'react-color';
 import { IChangeParam } from '@jzl/m-form/src/types';
 import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
@@ -58,6 +61,13 @@ const formItemLayout = {
   },
 };
 
+const CustomFormComponent = FormItemHoc(function(props: IFormComponentProps) {
+  function handleChange(e: ColorResult) {
+    props.onChange(e.hex);
+  }
+  return <SketchPicker onChangeComplete={handleChange} color={props.value} />;
+});
+
 export default observer(function TodoDemo() {
   const todo = useInstance(() => new Todo());
   React.useEffect(() => {
@@ -97,8 +107,7 @@ export default observer(function TodoDemo() {
           label="name"
           path="name"
           ruleFn={(value, model: Todo) => {
-            const result =
-              value === 'error' && model.done ? 'invalid' : undefined;
+            const result = value === 'error' && model.done ? 'invalid' : '';
             return result;
           }}
           placeholder="输入`error`并勾选done，有错误提示"
@@ -160,10 +169,19 @@ export default observer(function TodoDemo() {
           ))}
         </FormSelect>
         <FormWrapper label="家庭成员" path="family">
-          {todo.family.map((f, index) => (
-            <FormInput key={index} model={todo.family} path={`${index}`} />
-          ))}
-          <Button onClick={handelAddFamily}>添加</Button>
+          <CustomFormComponent
+            model={todo}
+            path="color"
+            ruleFn={color => (color === '#ffffff' ? '选白色会报错' : '')}
+          />
+        </FormWrapper>
+        <FormWrapper label="家庭成员" path="family">
+          <React.Fragment>
+            {todo.family.map((f, index) => (
+              <FormInput key={index} model={todo.family} path={`${index}`} />
+            ))}
+            <Button onClick={handelAddFamily}>添加</Button>
+          </React.Fragment>
         </FormWrapper>
 
         <FormButton type="primary" loading={todo.fetchAction.loading}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Select } from 'antd';
-import formHoc, { IOriginProps } from './hoc';
+import formHoc, { IFormComponentProps } from './hoc';
 import { ICommonInputProps } from '../types';
 import { SelectValue } from 'antd/lib/select';
 
@@ -10,7 +10,7 @@ interface F {
   OptGroup?: typeof Select.OptGroup;
 }
 
-const FormSelect: F = formHoc(function FormSelect(props: IOriginProps) {
+const FormSelect: F = formHoc(function FormSelect(props: IFormComponentProps) {
   function handleChange(value: SelectValue) {
     props.onChange(value);
   }

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Checkbox } from 'antd';
-import formHoc, { IOriginProps } from './hoc';
+import formHoc, { IFormComponentProps } from './hoc';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
-export default formHoc(function FormCheckbox(props: IOriginProps) {
+export default formHoc(function FormCheckbox(props: IFormComponentProps) {
   function handleChange(e: CheckboxChangeEvent) {
     props.onChange(e.target.checked);
   }

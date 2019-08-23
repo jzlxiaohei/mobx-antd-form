@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { DatePicker } from 'antd';
-import formHoc, { IOriginProps } from './hoc';
+import formHoc, { IFormComponentProps } from './hoc';
 import moment, { Moment } from 'moment';
 
 interface IProps {
   unix: boolean;
 }
 
-function FormDate(props: IOriginProps) {
+function FormDate(props: IFormComponentProps) {
   function handleChange(date: Moment) {
     props.onChange(date);
   }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Radio } from 'antd';
-import formHoc, { IOriginProps } from './hoc';
+import formHoc, { IFormComponentProps } from './hoc';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { ICommonInputProps } from '../types';
 
@@ -10,7 +10,7 @@ interface F {
   Radio?: typeof Radio;
 }
 
-const FormRadioGroup: F = formHoc(function(props: IOriginProps) {
+const FormRadioGroup: F = formHoc(function(props: IFormComponentProps) {
   function handleChange(e: RadioChangeEvent) {
     props.onChange(e.target.value);
   }

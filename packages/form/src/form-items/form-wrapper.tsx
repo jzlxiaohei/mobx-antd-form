@@ -1,6 +1,6 @@
 import * as React from 'react';
-import formHoc, { IOriginProps } from './hoc';
+import formHoc, { IFormComponentProps } from './hoc';
 
-export default formHoc(function FormCustom(props: IOriginProps) {
+export default formHoc(function FormCustom(props: IFormComponentProps) {
   return <React.Fragment>{props.children}</React.Fragment>;
 });

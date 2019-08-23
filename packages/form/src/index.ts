@@ -10,3 +10,7 @@ export { default as FormInputNumber } from './form-items/input-number';
 export { default as FormWrapper } from './form-items/form-wrapper';
 
 export { default as FormContext } from './form-context';
+
+export { default as FormItemHoc, IFormComponentProps } from './form-items/hoc';
+
+// export { ICommonInputProps } from './types';

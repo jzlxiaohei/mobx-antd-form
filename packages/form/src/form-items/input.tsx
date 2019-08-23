@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Input } from 'antd';
-import formHoc, { IOriginProps } from './hoc';
+import formHoc, { IFormComponentProps } from './hoc';
 
-export default formHoc(function FormInput(props: IOriginProps) {
+export default formHoc(function FormInput(props: IFormComponentProps) {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     props.onChange(e.target.value);
   }

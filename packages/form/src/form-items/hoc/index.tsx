@@ -5,7 +5,7 @@ import { Form } from 'antd';
 import { Observer } from 'mobx-react';
 import { FormContext } from '../../form-context';
 
-export interface IOriginProps {
+export interface IFormComponentProps {
   value: any;
   onChange(value: any): void;
   [x: string]: any;
