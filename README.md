@@ -144,7 +144,7 @@ FormButton: 和 FormContext 配合，自动管理验证和提交
 
 ## value 的取值规则
 
-1. 默认 model[path](path支持嵌套)
+1. 默认 `_.get(mode, path)` (path 支持嵌套)
 2. 组件提供，比如`FormDate` 提供
 
 ```jsx
