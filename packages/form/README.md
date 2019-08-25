@@ -46,7 +46,7 @@ import { FormContext, FormInput, FormCheckbox } from '@jzl/m-form';
 const store = useLocalStore(() => ({
   text: '',
   done: false,
-  toggleDone: (todo: string) => {
+  toggleDone() {
     store.done = !store.done;
   },
 }));
