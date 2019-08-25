@@ -37,19 +37,26 @@
 ## Basic Usage
 
 ```jsx
-  // 也可以不依赖 decorators, 但是代码上会有一定冗余
-  class UserModel {
-    @observable address = `loading...`
-    @observable name = {
-      first: '',
-      last: '',
-    }
-    fetchUserInfo() {// fetch and init data}
-    postUserInfo() { // post data}
-  }
+const store = useLocalStore(() => ({
+  text: '',
+  done: false,
+  toggleDone: (todo: string) => {
+    store.done = !store.done;
+  },
+}));
 
-  <FormInput model={userModel} label="first name" path="name.first" />
-  <FormInput model={userModel} label="last name" path="name.last" />
+return (
+  <FormContext>
+    <FormInput
+      className="input-class"
+      label="text"
+      path="text"
+      model={store}
+      placeholder="输入todo文本"
+    />
+    <FormCheckbox label="done" model={store} path="done" />
+  </FormContext>
+);
 ```
 
 ## 提供的组件和设施 (待添加)
@@ -93,43 +100,30 @@ FormButton: 和 FormContext 配合，自动管理验证和提交
 
 1. Model class: 比如
 
-```ts
-class Todo {
-  @observable text: '';
-  @observable done: false;
-  // @action and @computed ...
-}
+```jsx
+  // 也可以不依赖 decorators, 但是代码上会有一定冗余
+  class UserModel {
+    @observable address = `loading...`
+    @observable name = {
+      first: '',
+      last: '',
+    }
+    fetchUserInfo() {// fetch and init data}
+    postUserInfo() { // post data}
+  }
+
+  <FormInput model={userModel} label="first name" path="name.first" />
+  <FormInput model={userModel} label="last name" path="name.last" />
 ```
+
+对于 react class component， 直接在 constructor 里 new Model() 即可。
+
+如果配合 hooks，可以使用 `React.useRef`或者 `use-instance` 之类的第三方 hooks
 
 如果对使用 `decorators` 有所担忧，可以参考 mobx 的 `Decorators` [相关 API](https://mobx.js.org/refguide/modifiers.html), 或者使用 `extendObservable` api。
 
-如果配合 hooks，可以使用 `React.useRef`或者 `useInstance` 之类的第三方 hooks
-
 2. 配合 hooks
    使用 `mobx-react` 的 `useLocalStore`
-
-```jsx
-const store = useLocalStore(() => ({
-  text: '',
-  done: false,
-  toggleDone: (todo: string) => {
-    store.done = !store.done;
-  },
-}));
-
-return (
-  <FormContext>
-    <FormInput
-      className="input-class"
-      label="text"
-      path="text"
-      model={store}
-      placeholder="输入todo文本"
-    />
-    <FormCheckbox label="done" model={store} path="done" />
-  </FormContext>
-);
-```
 
 ## 对 Antd 的修改
 
@@ -163,7 +157,7 @@ FormDate.transformViewToModel = function(momentInst: Moment, props: IProps) {
 
 ## 自定义
 
-只有符合 value, onChange 模式的组件，可以快速融入这套体系，比如基于`react-color`的改造，只需要下面几行代码。
+只要符合 value, onChange 模式的组件，可以快速融入这套体系，比如基于`react-color`的改造，只需要下面几行代码。
 
 ```jsx
 import { FormItemHoc } from '@jzl/m-form';
