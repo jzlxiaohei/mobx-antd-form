@@ -1,9 +1,10 @@
-export function isString(str: any) {
-  return typeof str === 'string' || str instanceof String;
+export function isStringAndNotEmpty(str: any) {
+  const isString = typeof str === 'string' || str instanceof String;
+  return isString && str;
 }
 
 export function validateHasError(str: string | any) {
-  if (isString(str) && str) {
+  if (isStringAndNotEmpty(str)) {
     return {
       error: true,
       message: str,
