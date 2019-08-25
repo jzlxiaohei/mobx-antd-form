@@ -39,7 +39,7 @@ export default observer(function TodoDemo() {
           {store.doneNumber} / {store.total}
         </div>
       }
-      <FormContext itemProps={formItemLayout}>
+      <FormContext itemProps={formItemLayout} validateAtFirst>
         {store.todos.map(todo => {
           return (
             <React.Fragment key={todo.id}>
@@ -55,7 +55,9 @@ export default observer(function TodoDemo() {
         })}
         <FormButton loading={store.fetchAction.loading}>Submit</FormButton>
       </FormContext>
-      <Button onClick={handleClick}>添加todo</Button> <br />
+      <br />
+
+      <Button onClick={handleClick}>添加todo</Button>
       <Button onClick={handleConsole}>console store</Button>
     </div>
   );

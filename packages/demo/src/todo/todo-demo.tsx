@@ -168,7 +168,7 @@ export default observer(function TodoDemo() {
             </FormSelect.Option>
           ))}
         </FormSelect>
-        <FormWrapper label="家庭成员" path="family">
+        <FormWrapper label="color" path="family">
           <CustomFormComponent
             model={todo}
             path="color"

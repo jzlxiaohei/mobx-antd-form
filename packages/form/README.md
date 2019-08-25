@@ -18,6 +18,8 @@
 
 4. 扩展性强，符合 value，onChange 模式的组件，通过简单的包装，可以快速融入进这套模式中
 
+5. 性能。每次修改，只有被编辑的那个组件会触发渲染，form 再大，也不会有性能问题。
+
 ## 使用
 
 0. 首先安装 react react-dom mobx mobx-react antd
