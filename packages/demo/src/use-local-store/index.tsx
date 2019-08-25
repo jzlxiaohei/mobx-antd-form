@@ -5,10 +5,10 @@ import {
   FormContext,
   FormButton,
 } from '@jzl/m-form/src';
-import { observer, useLocalStore } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { Button } from 'antd';
 import { toJS } from 'mobx';
-import { create } from './model';
+import { useTodos } from './model';
 
 const formItemLayout = {
   labelCol: {
@@ -22,7 +22,7 @@ const formItemLayout = {
 };
 
 export default observer(function TodoDemo() {
-  const store = useLocalStore(create);
+  const store = useTodos();
   React.useEffect(() => {
     store.fetchAction.run();
   }, []);

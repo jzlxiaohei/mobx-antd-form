@@ -1,5 +1,5 @@
 import { AsyncAction } from '../utils/async';
-import { extendObservable } from 'mobx';
+import { useLocalStore } from 'mobx-react';
 
 let idIndex = 0;
 
@@ -27,40 +27,24 @@ function fetch() {
   });
 }
 
-export function create() {
-  const result = extendObservable(
-    {},
-    {
+export function useTodos() {
+  const result = useLocalStore(() => {
+    return {
       todos: [] as ITodo[],
       addTodo() {
         this.todos.push(createTodo());
       },
       get total() {
-        return this.todos.length;
+        return result.todos.length;
       },
       get doneNumber() {
-        return this.todos.filter((todo: ITodo) => todo.done).length;
+        return result.todos.filter((todo: ITodo) => todo.done).length;
       },
       fetchAction: new AsyncAction(async () => {
         await fetch();
         result.addTodo();
       }),
-    },
-  );
+    };
+  });
   return result;
-}
-
-export function createTodos() {
-  return {
-    todos: [] as ITodo[],
-    addTodo() {
-      this.todos.push(createTodo());
-    },
-    get total() {
-      return this.todos.length;
-    },
-    get doneNumber() {
-      return this.todos.filter((todo: ITodo) => todo.done).length;
-    },
-  };
 }
