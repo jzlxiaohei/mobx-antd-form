@@ -37,6 +37,10 @@
 ## Basic Usage
 
 ```jsx
+import { useLocalStore } from 'mobx-react';
+import { FormContext, FormInput, FormCheckbox } from '@jzl/m-form';
+
+// store
 const store = useLocalStore(() => ({
   text: '',
   done: false,
@@ -45,6 +49,7 @@ const store = useLocalStore(() => ({
   },
 }));
 
+// function component
 return (
   <FormContext>
     <FormInput
