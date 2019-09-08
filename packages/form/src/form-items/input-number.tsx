@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { InputNumber } from 'antd';
-import formHoc, { IFormComponentProps } from './hoc';
+import formHoc from '../hoc';
+import { IFormComponentProps } from '../types';
 
 export default formHoc(function FormInput(props: IFormComponentProps) {
   function handleChange(value: number) {

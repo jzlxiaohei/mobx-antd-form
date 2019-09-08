@@ -1,6 +1,17 @@
 import { FormItemProps } from 'antd/lib/form/FormItem';
 
-export type ValidateFn<M> = (value: any, model: M) => string | void;
+export type ValidateFn<M> = ((value: any, model: M) => string | void) | string;
+
+export interface IFormComponentProps {
+  value: any;
+  onChange(value: any): void;
+  [x: string]: any;
+}
+export interface ICommonOption {
+  key?: string;
+  title: string;
+  value: any;
+}
 
 export interface IChangeParam<M> {
   value: any;
@@ -11,16 +22,20 @@ export interface IChangeParam<M> {
 
 export interface ICommonInputProps<M> {
   model?: M;
-  path: string;
+  path?: string;
   value?: any;
   onChange?(param: IChangeParam<M>): void;
   transformViewToModel?(value: any, props: ICommonInputProps<M>): any;
   transformModelToView?(mValue: any, props: ICommonInputProps<M>): any;
   getValue?(model: M, path: string): any;
-  label?: string;
+  label?: string | React.ReactNode;
   itemProps?: FormItemProps;
   noFormItem?: boolean;
-  ruleFn?: ValidateFn<M>;
+  rules?: ValidateFn<M> | ValidateFn<M>[];
   needValidate?: boolean;
+  suffixTip?: React.ReactNode;
+  options?: ICommonOption[];
+  dayFlags?: string[];
+  dayFlag?: string;
   [x: string]: any;
 }

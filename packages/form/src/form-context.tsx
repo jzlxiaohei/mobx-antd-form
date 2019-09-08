@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { ValidateInfoManager } from './validator';
+import { ValidateInfoManager } from './validator/ValidateInfoManager';
 
-interface IContextProps<M> {
+export interface IContextProps<M> {
   model?: M;
   itemProps?: any;
+  inputProps?: any;
   needValidate?: boolean;
   validateInfoManager?: ValidateInfoManager;
+  [x: string]: any;
 }
 
 interface IProps<M> extends IContextProps<M> {
@@ -16,17 +18,15 @@ export const FormContext = React.createContext<IContextProps<any>>({
   model: null,
   needValidate: false,
   itemProps: null,
-  validateInfoManager: null,
+  validateInfoManager: undefined,
+  inputProps: null
 });
 
 export default function FormWithContext<M extends Object>(
   props: IProps<M> &
-    React.DetailedHTMLProps<
-      React.FormHTMLAttributes<HTMLFormElement>,
-      HTMLFormElement
-    >,
+    React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 ) {
-  const { model, itemProps, validateAtFirst, ...otherProps } = props;
+  const { model, itemProps, validateAtFirst, inputProps, ...otherProps } = props;
   const [needValidate, setNeedValidate] = React.useState(validateAtFirst);
 
   const ref = React.useRef<ValidateInfoManager>();
@@ -42,6 +42,7 @@ export default function FormWithContext<M extends Object>(
     }
 
     let isValid = validateInfoManager.isValid;
+
     if (otherProps.onSubmit && isValid) {
       otherProps.onSubmit(e);
     }
@@ -49,7 +50,7 @@ export default function FormWithContext<M extends Object>(
 
   return (
     <FormContext.Provider
-      value={{ model, itemProps, needValidate, validateInfoManager }}
+      value={{ model, itemProps, inputProps, needValidate, validateInfoManager }}
     >
       <form {...otherProps} onSubmit={e => handleSubmit(e)} />
     </FormContext.Provider>

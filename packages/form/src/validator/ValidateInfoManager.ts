@@ -1,5 +1,5 @@
 import { validateHasError } from '../utils';
-import { observable } from 'mobx';
+import { decorate, observable } from 'mobx';
 
 class ValidateInfo {
   model: any;
@@ -17,7 +17,6 @@ class ValidateInfo {
 export class ValidateInfoManager {
   validateInfo: ValidateInfo[] = [];
 
-  @observable
   isValid: boolean = true;
 
   setValidateInfo(model: any, path: string, validString: string | void) {
@@ -33,6 +32,14 @@ export class ValidateInfoManager {
     this.isValid = this.calculateValid();
   }
 
+  clearValidInfo(model: any, path: string) {
+    const foundInfo = this.validateInfo.find(vi => vi.model === model);
+    if (foundInfo) {
+      delete foundInfo.info[path];
+    }
+    this.isValid = this.calculateValid();
+  }
+
   private calculateValid() {
     for (let vItem of this.validateInfo) {
       if (!vItem.isValid()) {
@@ -42,3 +49,7 @@ export class ValidateInfoManager {
     return true;
   }
 }
+
+decorate(ValidateInfoManager, {
+  isValid: observable
+});

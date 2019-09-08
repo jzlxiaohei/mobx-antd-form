@@ -10,11 +10,10 @@ import {
   FormButton,
   FormWrapper,
   FormInputNumber,
-  IFormComponentProps,
   FormItemHoc,
 } from '@jzl/m-form/src';
 import { SketchPicker, ColorResult } from 'react-color';
-import { IChangeParam } from '@jzl/m-form/src/types';
+import { IChangeParam, IFormComponentProps } from '@jzl/m-form/src/types';
 import { observer } from 'mobx-react';
 import { Todo, TodoCategory, TodoPriority, GiveUpReason } from './model';
 import { Button } from 'antd';
@@ -106,7 +105,7 @@ export default observer(function TodoDemo() {
           className="input-class"
           label="name"
           path="name"
-          ruleFn={(value, model: Todo) => {
+          ruleFn={(value: string, model: Todo) => {
             const result = value === 'error' && model.done ? 'invalid' : '';
             return result;
           }}
@@ -172,7 +171,9 @@ export default observer(function TodoDemo() {
           <CustomFormComponent
             model={todo}
             path="color"
-            ruleFn={color => (color === '#ffffff' ? '选白色会报错' : '')}
+            ruleFn={(color: string) =>
+              color === '#ffffff' ? '选白色会报错' : ''
+            }
           />
         </FormWrapper>
         <FormWrapper label="家庭成员" path="family">

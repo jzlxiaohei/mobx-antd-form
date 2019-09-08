@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { getFormProps } from './props';
-import { ICommonInputProps } from '../../types';
+import { ICommonInputProps } from '../types';
 import { Form } from 'antd';
-import { Observer } from 'mobx-react';
-import { FormContext } from '../../form-context';
-
-export interface IFormComponentProps {
-  value: any;
-  onChange(value: any): void;
-  [x: string]: any;
-}
+import { Observer } from 'mobx-react-lite';
+import { FormContext } from '../form-context';
 
 export default function(OriginComponent: React.ElementType) {
   function FormItemHoc<M extends Object>(rawProps: ICommonInputProps<M>) {
@@ -22,6 +16,7 @@ export default function(OriginComponent: React.ElementType) {
                 transformModelToView,
                 transformViewToModel,
               } = OriginComponent as any;
+              const [innerRuleMsg, setInnerRuleMsg] = React.useState('');
 
               const defaultProps = {
                 transformModelToView: transformModelToView,
@@ -30,11 +25,25 @@ export default function(OriginComponent: React.ElementType) {
                 itemProps: contextValue.itemProps,
                 needValidate: contextValue.needValidate,
                 validateInfoManager: contextValue.validateInfoManager,
+                inputPropsFromContext: contextValue.inputProps,
+                innerRuleMsg,
+                setRuleMsg(msg: string) {
+                  setInnerRuleMsg(msg);
+                },
+                clearRuleMsg() {
+                  setInnerRuleMsg('');
+                },
               };
               const props = getFormProps({
                 ...defaultProps,
                 ...rawProps,
               });
+
+              React.useEffect(() => {
+                return () => {
+                  props.clear();
+                };
+              }, []);
 
               if (props.noFormItem) {
                 return (
@@ -52,6 +61,7 @@ export default function(OriginComponent: React.ElementType) {
                     value={props.value}
                     onChange={props.onChange}
                   />
+                  {props.suffixTip}
                 </Form.Item>
               );
             }}
