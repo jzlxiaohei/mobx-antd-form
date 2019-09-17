@@ -31,7 +31,9 @@
     test: /node_modules[\\/]@jzl[\\/]m-form[\\/].*\.(j|t)sx?$/,
     use: {
       loader: "babel-loader",
-      options: {// your options}
+      options: {
+        // your options
+      }
     }
   },
 ```

@@ -1,5 +1,11 @@
-import { get, set } from 'lodash';
-import { runInAction, isObservableProp, isObservable, isObservableObject } from 'mobx';
+import get from 'lodash/get';
+import set from 'lodash/set';
+import {
+  runInAction,
+  isObservableProp,
+  isObservable,
+  isObservableObject,
+} from 'mobx';
 import { ICommonInputProps } from '../types';
 import { validateHasError } from '../utils';
 import defaultRuleManager from '../validator/rules-manager';
@@ -19,7 +25,7 @@ const ignoreFields = [
   'needValidate',
   'validateInfoManager',
   'inputPropsFromContext',
-  'suffixTip'
+  'suffixTip',
 ];
 
 export function omitCommonProps(props: any) {
@@ -37,7 +43,7 @@ export const identity = (e: any) => e;
 export function getFormProps<M extends Object>(
   props: ICommonInputProps<M> & {
     innerRuleMsg?: string;
-  }
+  },
 ) {
   const transformModelToView = props.transformModelToView || identity;
   const transformViewToModel = props.transformViewToModel || identity;
@@ -55,7 +61,7 @@ export function getFormProps<M extends Object>(
         path,
         defaultChangeFn() {
           runInAction(() => set(model, path, value));
-        }
+        },
       });
     } else {
       runInAction(() => set(model, path, value));
@@ -77,9 +83,12 @@ export function getFormProps<M extends Object>(
       const firstPart = path.substring(0, lastIndex);
       const lastPart = path.substring(lastIndex + 1);
       const finalModel = get(model, firstPart);
-      if (isObservableObject(finalModel) && !isObservableProp(finalModel, lastPart)) {
+      if (
+        isObservableObject(finalModel) &&
+        !isObservableProp(finalModel, lastPart)
+      ) {
         console.error(
-          `nested value from ${props.path} is not observable. Maybe it works, but it is a potential bug`
+          `nested value from ${props.path} is not observable. Maybe it works, but it is a potential bug`,
         );
       }
     }
@@ -90,11 +99,11 @@ export function getFormProps<M extends Object>(
 
   const inputProps = {
     ...props.inputPropsFromContext,
-    ...omitCommonProps(props)
+    ...omitCommonProps(props),
   };
   const itemProps = props.itemProps
     ? {
-        ...props.itemProps
+        ...props.itemProps,
       }
     : {};
 
@@ -103,7 +112,11 @@ export function getFormProps<M extends Object>(
       let help = '';
       if (props.innerRuleMsg) {
         help = props.innerRuleMsg;
-        props.validateInfoManager.setValidateInfo(model, path, props.innerRuleMsg);
+        props.validateInfoManager.setValidateInfo(
+          model,
+          path,
+          props.innerRuleMsg,
+        );
       } else {
         help = defaultRuleManager.checkTheRules(props.rules, modelValue, model);
         props.validateInfoManager.setValidateInfo(model, path, help);
@@ -130,6 +143,6 @@ export function getFormProps<M extends Object>(
       if (props.rules) {
         props.validateInfoManager.clearValidInfo(props.model, props.path);
       }
-    }
+    },
   };
 }
