@@ -105,7 +105,13 @@ export default observer(function TodoDemo() {
           className="input-class"
           label="name"
           path="name"
-          ruleFn={(value: string, model: Todo) => {
+          beforeChange={param => {
+            console.log(param.oldValue, param.value);
+            if (param.oldValue === '11') {
+              return false;
+            }
+          }}
+          rules={(value: string, model: Todo) => {
             const result = value === 'error' && model.done ? 'invalid' : '';
             return result;
           }}
@@ -171,7 +177,7 @@ export default observer(function TodoDemo() {
           <CustomFormComponent
             model={todo}
             path="color"
-            ruleFn={(color: string) =>
+            rules={(color: string) =>
               color === '#ffffff' ? '选白色会报错' : ''
             }
           />

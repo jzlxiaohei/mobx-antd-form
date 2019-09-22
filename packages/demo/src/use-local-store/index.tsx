@@ -47,7 +47,7 @@ export default observer(function TodoDemo() {
                 label="text"
                 model={todo}
                 path="text"
-                ruleFn={value => (!value ? 'required' : null)}
+                rules={(value: any) => (!value ? 'required' : null)}
               />
               <FormCheckbox label="done" model={todo} path="done" />
             </React.Fragment>

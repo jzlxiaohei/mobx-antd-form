@@ -15,6 +15,8 @@ const ignoreFields = [
   'path',
   'value',
   'onChange',
+  'beforeChange',
+  'afterChange',
   'getValue',
   'transformViewToModel',
   'transformModelToView',
@@ -26,6 +28,9 @@ const ignoreFields = [
   'validateInfoManager',
   'inputPropsFromContext',
   'suffixTip',
+  'innerRuleMsg',
+  'setRuleMsg',
+  'clearRuleMsg',
 ];
 
 export function omitCommonProps(props: any) {
@@ -54,17 +59,39 @@ export function getFormProps<M extends Object>(
 
   function handleChange(changeValue: any) {
     const value = transformViewToModel(changeValue, props);
+    const sharedParam = {
+      model,
+      value,
+      path,
+    };
+
+    if (props.beforeChange) {
+      const oldValue = getValue(model, path as any);
+      const beforeCheckResult = props.beforeChange({
+        ...sharedParam,
+        oldValue,
+      });
+      if (beforeCheckResult === false) {
+        return;
+      }
+    }
+
+    const defaultChangeFn = () => {
+      runInAction(() => set(model, path, value));
+      if (props.afterChange) {
+        props.afterChange({
+          ...sharedParam,
+        });
+      }
+    };
+
     if (props.onChange) {
       props.onChange({
-        value,
-        model,
-        path,
-        defaultChangeFn() {
-          runInAction(() => set(model, path, value));
-        },
+        ...sharedParam,
+        defaultChangeFn,
       });
     } else {
-      runInAction(() => set(model, path, value));
+      defaultChangeFn();
     }
   }
 

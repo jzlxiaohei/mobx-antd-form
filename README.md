@@ -92,13 +92,13 @@ FormButton: 和 FormContext 配合，自动管理验证和提交
 
 ## Validate
 
-在组件上添加 ruleFn 接受 `(value: any, Model: M) => string | any`
+在组件上添加 rules 接受 `(value: any, Model: M) => string | any`
 返回值只要是非空字符串，就表明出错，提示信息就是返回的字符串
 
 ```jsx
 // yourRuleFn 接受 value, 以及model（就是这里的todo)
 // 返回值只要是非空字符串，就表明出错，
-<FormInput model={todo} path="text" ruleFn={yourRuleFn} />
+<FormInput model={todo} path="text" rules={yourRuleFn} />
 ```
 
 点击按钮后，检查所有规则，如果有错，阻止提交，给出提示（提示的样式见 antd Form.Item） 同时 disable `FormButton`，直到满足所有规则。

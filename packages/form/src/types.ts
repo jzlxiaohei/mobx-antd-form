@@ -25,6 +25,12 @@ export interface ICommonInputProps<M> {
   path?: string;
   value?: any;
   onChange?(param: IChangeParam<M>): void;
+  afterChange?(param: IChangeParam<M>): void;
+  beforeChange?(
+    param: IChangeParam<M> & {
+      oldValue?: any;
+    },
+  ): boolean | void;
   transformViewToModel?(value: any, props: ICommonInputProps<M>): any;
   transformModelToView?(mValue: any, props: ICommonInputProps<M>): any;
   getValue?(model: M, path: string): any;

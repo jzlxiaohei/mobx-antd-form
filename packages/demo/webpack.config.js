@@ -4,7 +4,7 @@ const webpack = require('webpack');
 
 const isDev = process.env.NODE_ENV !== 'production';
 const APP_ENV = process.env.APP_ENV || 'development';
-const port = 8082;
+const port = 8052;
 
 const resolvePath = _path => {
   return path.join(__dirname, _path);
