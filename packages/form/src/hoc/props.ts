@@ -6,7 +6,7 @@ import {
   isObservable,
   isObservableObject,
 } from 'mobx';
-import { ICommonInputProps } from '../types';
+import { ICommonInputProps, ValidateFn } from '../types';
 import { validateHasError } from '../utils';
 import defaultRuleManager from '../validator/rules-manager';
 
@@ -28,9 +28,7 @@ const ignoreFields = [
   'validateInfoManager',
   'inputPropsFromContext',
   'suffixTip',
-  'innerRuleMsg',
-  'setRuleMsg',
-  'clearRuleMsg',
+  'defaultRuleFn',
 ];
 
 export function omitCommonProps(props: any) {
@@ -47,7 +45,7 @@ export const identity = (e: any) => e;
 
 export function getFormProps<M extends Object>(
   props: ICommonInputProps<M> & {
-    innerRuleMsg?: string;
+    defaultRuleFn?: ValidateFn<M>;
   },
 ) {
   const transformModelToView = props.transformModelToView || identity;
@@ -134,20 +132,19 @@ export function getFormProps<M extends Object>(
       }
     : {};
 
+  let rules = [] as ValidateFn<M>[];
+  if (props.defaultRuleFn) {
+    rules.push(props.defaultRuleFn);
+  }
   if (props.rules) {
+    rules = rules.concat(props.rules);
+  }
+
+  if (rules.length) {
     try {
       let help = '';
-      if (props.innerRuleMsg) {
-        help = props.innerRuleMsg;
-        props.validateInfoManager.setValidateInfo(
-          model,
-          path,
-          props.innerRuleMsg,
-        );
-      } else {
-        help = defaultRuleManager.checkTheRules(props.rules, modelValue, model);
-        props.validateInfoManager.setValidateInfo(model, path, help);
-      }
+      help = defaultRuleManager.checkTheRules(rules, modelValue, model);
+      props.validateInfoManager.setValidateInfo(model, path, help);
       if (props.needValidate) {
         const checkResult = validateHasError(help);
         if (checkResult.error) {
@@ -167,7 +164,7 @@ export function getFormProps<M extends Object>(
     value: formValue,
     onChange: handleChange,
     clear() {
-      if (props.rules) {
+      if (rules) {
         props.validateInfoManager.clearValidInfo(props.model, props.path);
       }
     },

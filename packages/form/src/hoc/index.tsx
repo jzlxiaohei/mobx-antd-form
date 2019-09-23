@@ -15,8 +15,11 @@ export default function(OriginComponent: React.ElementType) {
               const {
                 transformModelToView,
                 transformViewToModel,
+                // 组件可以通过 defaultRuleFn 去控制状态是否合法
+                // 比如上传组件，正在上传中，最近的状态不是合法的，可以设置为 `请等待上传完毕`
+                // (value, model) => string | any,
+                defaultRuleFn,
               } = OriginComponent as any;
-              const [innerRuleMsg, setInnerRuleMsg] = React.useState('');
 
               const defaultProps = {
                 transformModelToView: transformModelToView,
@@ -26,13 +29,7 @@ export default function(OriginComponent: React.ElementType) {
                 needValidate: contextValue.needValidate,
                 validateInfoManager: contextValue.validateInfoManager,
                 inputPropsFromContext: contextValue.inputProps,
-                innerRuleMsg,
-                setRuleMsg(msg: string) {
-                  setInnerRuleMsg(msg);
-                },
-                clearRuleMsg() {
-                  setInnerRuleMsg('');
-                },
+                defaultRuleFn,
               };
               const props = getFormProps({
                 ...defaultProps,

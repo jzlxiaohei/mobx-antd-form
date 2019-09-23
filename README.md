@@ -103,6 +103,9 @@ FormButton: 和 FormContext 配合，自动管理验证和提交
 
 点击按钮后，检查所有规则，如果有错，阻止提交，给出提示（提示的样式见 antd Form.Item） 同时 disable `FormButton`，直到满足所有规则。
 
+组件可以自己提供 `defaultRuleFn: (value, model) => string | any`
+通过 defaultRuleFn 去控制状态默认的的合法性，比如上传组件，正在上传中，最近的状态不是合法的，可以设置为 `请等待上传完毕`。
+
 ## Model 的书写建议
 
 双向绑定和自动校验的功能，是依赖`mobx`的。总结了两种方式。

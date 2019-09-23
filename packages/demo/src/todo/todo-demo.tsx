@@ -70,7 +70,7 @@ const CustomFormComponent = FormItemHoc(function(props: IFormComponentProps) {
 export default observer(function TodoDemo() {
   const todo = useInstance(() => new Todo());
   React.useEffect(() => {
-    console.log('todo name');
+    // console.log('todo name');
   }, [todo.name]);
 
   function handelAddFamily() {
@@ -106,7 +106,6 @@ export default observer(function TodoDemo() {
           label="name"
           path="name"
           beforeChange={param => {
-            console.log(param.oldValue, param.value);
             if (param.oldValue === '11') {
               return false;
             }
