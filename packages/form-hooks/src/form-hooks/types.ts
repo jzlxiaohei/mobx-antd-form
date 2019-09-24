@@ -18,10 +18,9 @@ export interface ICommonOption {
   value: any;
 }
 
-export interface IChangeParam<M> {
+export interface IChangeParam {
   value: any;
-  model: IFormHooksModel<M>;
-  path: string;
+  // model: IFormHooksModel<M>;
   defaultChangeFn?(): void;
 }
 
@@ -29,10 +28,10 @@ export interface ICommonFormOuterProps<M> {
   model?: IFormHooksModel<M>;
   path?: string;
   value?: any;
-  onChange?(param: IChangeParam<M>): void;
-  afterChange?(param: IChangeParam<M>): void;
+  onChange?(param: IChangeParam): void;
+  afterChange?(param: IChangeParam): void;
   beforeChange?(
-    param: IChangeParam<M> & {
+    param: IChangeParam & {
       oldValue?: any;
     },
   ): boolean | void;

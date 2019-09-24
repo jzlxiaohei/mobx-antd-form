@@ -11,6 +11,10 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
 
   const transformModelToView = props.transformModelToView || identity;
   const transformViewToModel = props.transformViewToModel || identity;
+
+  const modelValue = getValue(model.state, path as any);
+  const formValue = transformModelToView(modelValue, props);
+
   function handleChange(changeValue: any) {
     const value = transformViewToModel(changeValue, props);
     const sharedParam = {
@@ -20,7 +24,7 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
     };
 
     if (props.beforeChange) {
-      const oldValue = getValue(model.data, path);
+      const oldValue = modelValue;
       const beforeCheckResult = props.beforeChange({
         ...sharedParam,
         oldValue,
@@ -48,9 +52,6 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
       defaultChangeFn();
     }
   }
-
-  const modelValue = getValue(model.data, path as any);
-  const formValue = transformModelToView(modelValue, props);
 
   const inputProps = {
     ...props.inputPropsFromContext,

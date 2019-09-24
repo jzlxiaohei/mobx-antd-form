@@ -7,9 +7,10 @@ export function createModel<M extends Record<string, any>>(
   const [state, setState] = React.useState(obj);
 
   return {
-    data: state,
+    state,
     update(key: string, value: any) {
       set(state, key, value);
+
       setState({
         ...state,
       });
@@ -18,6 +19,6 @@ export function createModel<M extends Record<string, any>>(
 }
 
 export type IFormHooksModel<M> = {
-  data: M;
+  state: M;
   update(key: string, value: any): void;
 };

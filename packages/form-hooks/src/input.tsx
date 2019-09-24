@@ -6,7 +6,7 @@ export function FormHooksInput<M extends Record<string, any>>(props: {
   model: IFormHooksModel<M>;
   path: string;
 }) {
-  const data = props.model.data;
+  const data = props.model.state;
   const value = data[props.path];
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
