@@ -29,6 +29,14 @@ function create() {
 
 type IModelState = ReturnType<typeof create>;
 
+const actions = {
+  addDynamicFields(model: IFormHooksModel<IModelState>) {
+    model.update(draft => {
+      draft.dynamicFields.push({ name: '' });
+    });
+  },
+};
+
 export function TestInput() {
   const [state, setState] = React.useState(create());
 
@@ -68,6 +76,7 @@ export function TestInput() {
               return '不能输入111';
             }
           }}
+          label="name1"
           onChange={handleItemChange}
           path="name1"
           beforeChange={handleBefore}
@@ -83,13 +92,15 @@ export function TestInput() {
           {(model: IFormHooksModel<IModelState>) => {
             const Inputs = model.state.dynamicFields.map((f, index) => {
               return (
-                <FormInput key={index} path={`dynamicFields.${index}.name}`} />
+                <FormInput
+                  label={f.name}
+                  key={index}
+                  path={`dynamicFields.${index}.name}`}
+                />
               );
             });
             function handleAddDynamic() {
-              model.update(draft => {
-                draft.dynamicFields.push({ name: '' });
-              });
+              actions.addDynamicFields(model);
             }
             return (
               <React.Fragment>
