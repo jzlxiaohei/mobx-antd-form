@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Select } from 'antd';
 import formHoc from '../hoc';
 import { IFormComponentProps } from '../types';
-import { ICommonInputProps, ICommonOption } from '../types';
+import { ICommonFormOuterProps, ICommonOption } from '../types';
 import { SelectValue } from 'antd/lib/select';
 
 interface IProps {
@@ -10,12 +10,14 @@ interface IProps {
 }
 
 interface F {
-  <M extends Object>(rawProps: ICommonInputProps<M>): React.ReactElement;
+  <M extends Object>(rawProps: ICommonFormOuterProps<M>): React.ReactElement;
   Option?: typeof Select.Option;
   OptGroup?: typeof Select.OptGroup;
 }
 
-const FormSelect: F = formHoc(function FormSelect(props: IFormComponentProps & IProps) {
+const FormSelect: F = formHoc(function FormSelect(
+  props: IFormComponentProps & IProps,
+) {
   function handleChange(value: SelectValue) {
     props.onChange(value);
   }

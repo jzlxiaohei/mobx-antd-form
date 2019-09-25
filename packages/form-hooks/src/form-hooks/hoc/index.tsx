@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useFormProps } from './use-form-props';
 import { Form } from 'antd';
-import { FormContext } from './form-context';
-import { ICommonFormOuterProps } from './types';
+import { FormContext } from '../form-context';
+import { ICommonFormOuterProps } from '../types';
 import get from 'lodash/get';
 
 export default function(OriginComponent: React.ElementType) {
@@ -14,17 +14,15 @@ export default function(OriginComponent: React.ElementType) {
       transformViewToModel,
       defaultRuleFn,
     } = OriginComponent as any;
-    if (contextValue.model && rawProps.model) {
-      console.warn(
-        `context and props both have model.
-        You'd better to make sure path is unique in FormContext. Otherwise rule manager might be broken`,
-      );
+    if (rawProps.model) {
+      throw new Error(`pass model in FormContext`);
     }
     const defaultProps = {
       transformModelToView: transformModelToView,
       transformViewToModel: transformViewToModel,
       model: contextValue.model,
       itemProps: contextValue.itemProps,
+      onContextChange: contextValue.onContextChange,
       needValidate: contextValue.needValidate,
       validateInfoManager: contextValue.validateInfoManager,
       inputPropsFromContext: contextValue.inputProps,
@@ -51,6 +49,7 @@ export default function(OriginComponent: React.ElementType) {
           {...props.inputProps}
           value={props.value}
           onChange={props.onChange}
+          children={props.children}
         />
       );
     }
@@ -60,6 +59,8 @@ export default function(OriginComponent: React.ElementType) {
           {...props.inputProps}
           value={props.value}
           onChange={props.onChange}
+          model={props.model}
+          children={props.children}
         />
         {props.suffixTip}
       </Form.Item>

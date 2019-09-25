@@ -16,20 +16,19 @@ export interface ICommonOption {
   value: any;
 }
 
-export interface IChangeParam {
+export interface IChangeParam<M> {
   value: any;
-  // model: IFormHooksModel<M>;
+  state?: M;
+  path?: string;
   defaultChangeFn?(): void;
 }
 
 export interface ICommonFormOuterProps<M> {
-  model?: IFormHooksModel<M>;
   path?: string;
   value?: any;
-  onChange?(param: IChangeParam): void;
-  afterChange?(param: IChangeParam): void;
+  onChange?(param: IChangeParam<M>): void;
   beforeChange?(
-    param: IChangeParam & {
+    param: IChangeParam<M> & {
       oldValue?: any;
     },
   ): boolean | void;
@@ -45,5 +44,6 @@ export interface ICommonFormOuterProps<M> {
   options?: ICommonOption[];
   dayFlags?: dayFlag[];
   dayFlag?: dayFlag;
+  children?: (model: IFormHooksModel<M>) => React.ReactElement;
   [x: string]: any;
 }

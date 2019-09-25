@@ -11,7 +11,7 @@ export function FormHooksInput<M extends Record<string, any>>(props: {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
-    props.model.update(props.path, value as any);
+    props.model.setKey(props.path, value as any);
   }
   return <Input value={value} onChange={handleChange}></Input>;
 }

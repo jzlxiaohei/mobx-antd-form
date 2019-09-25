@@ -8,5 +8,7 @@ export default formHoc(function FormInput(props: IFormComponentProps) {
     props.onChange(e.target.value);
   }
 
-  return <Input.TextArea {...props} value={props.value} onChange={handleChange} />;
+  return (
+    <Input.TextArea {...props} value={props.value} onChange={handleChange} />
+  );
 });

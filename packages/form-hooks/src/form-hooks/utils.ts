@@ -18,6 +18,7 @@ const ignoreFields = [
   'suffixTip',
   'defaultRuleFn',
   'children',
+  'onContextChange',
 ];
 
 export function omitCommonProps(props: any) {

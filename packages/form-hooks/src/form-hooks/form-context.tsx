@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ValidateInfoManager } from './validator/validate-info-manager';
-import { IFormHooksModel } from './create-model';
+import { IFormHooksModel, createModel } from './create-model';
 
 export interface IContextProps<M> {
   model?: IFormHooksModel<M>;
@@ -8,15 +8,20 @@ export interface IContextProps<M> {
   inputProps?: any;
   needValidate?: boolean;
   validateInfoManager?: ValidateInfoManager;
-  [x: string]: any;
+  onContextChange?({ state }: { state: M }): void;
+  // [x: string]: any;
 }
 
-interface IProps<M> extends IContextProps<M> {
+type IProps<M> = Omit<IContextProps<M>, 'model'> & {
+  initState?: M;
+  state?: M;
   validateAtFirst?: boolean;
-}
+  onSubmit({ state }: { state: M }, e: React.FormEvent<HTMLFormElement>): void;
+};
 
 export const FormContext = React.createContext<IContextProps<any>>({
   model: null,
+  onContextChange: undefined,
   needValidate: false,
   itemProps: null,
   validateInfoManager: undefined,
@@ -24,29 +29,31 @@ export const FormContext = React.createContext<IContextProps<any>>({
 });
 
 export default function FormWithContext<M extends Object>(
-  props: IProps<M> &
+  props: Omit<
     React.DetailedHTMLProps<
       React.FormHTMLAttributes<HTMLFormElement>,
       HTMLFormElement
     >,
+    'onSubmit'
+  > &
+    IProps<M>,
 ) {
   const {
-    model,
+    initState,
+    state,
     itemProps,
     validateAtFirst,
     inputProps,
+    onContextChange,
     ...otherProps
   } = props;
   const [needValidate, setNeedValidate] = React.useState(validateAtFirst);
-  const [isValid, setIsValid] = React.useState(true);
+
+  const model = createModel(state || initState);
 
   const ref = React.useRef<ValidateInfoManager>();
   if (!ref.current) {
     ref.current = new ValidateInfoManager();
-    ref.current.onValidChange(valid => {
-      console.log(valid);
-      setIsValid(valid);
-    });
   }
   const validateInfoManager = ref.current;
 
@@ -57,11 +64,11 @@ export default function FormWithContext<M extends Object>(
         setNeedValidate(true);
       }
 
-      if (otherProps.onSubmit && isValid) {
-        otherProps.onSubmit(e);
+      if (otherProps.onSubmit && validateInfoManager.isValid) {
+        otherProps.onSubmit({ state: model.state }, e);
       }
     },
-    [needValidate, isValid],
+    [model, needValidate],
   );
 
   return (
@@ -72,6 +79,7 @@ export default function FormWithContext<M extends Object>(
         inputProps,
         needValidate,
         validateInfoManager,
+        onContextChange,
       }}
     >
       <form {...otherProps} onSubmit={e => handleSubmit(e)} />

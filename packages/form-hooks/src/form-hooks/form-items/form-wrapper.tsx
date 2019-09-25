@@ -1,9 +1,14 @@
 import * as React from 'react';
 import formHoc from '../hoc';
 import { IFormComponentProps } from '../types';
+import { IFormHooksModel } from '../create-model';
 
-function FormWrapper(props: IFormComponentProps) {
-  return props.children;
+function FormWrapper<M>(
+  props: IFormComponentProps & {
+    children: (model: IFormHooksModel<M>) => React.ReactElement;
+  },
+) {
+  return props.children(props.model);
 }
 
 export default formHoc(FormWrapper);

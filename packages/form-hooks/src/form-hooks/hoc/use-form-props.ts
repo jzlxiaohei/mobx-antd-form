@@ -1,14 +1,16 @@
 import get from 'lodash/get';
-import { ICommonFormOuterProps, ValidateFn } from './types';
-import { omitCommonProps } from './utils';
-import defaultRuleManager from './validator/rules-manager';
-import { validateHasError } from './validator/utils';
-import { ValidateInfoManager } from './validator/validate-info-manager';
+import { ICommonFormOuterProps, ValidateFn } from '../types';
+import { omitCommonProps } from '../utils';
+import defaultRuleManager from '../validator/rules-manager';
+import { validateHasError } from '../validator/utils';
+import { ValidateInfoManager } from '../validator/validate-info-manager';
+import { IFormHooksModel } from '../create-model';
+import * as React from 'react';
 
 const identity = (e: any) => e;
 
 export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
-  const model = props.model!;
+  const model = props.model! as IFormHooksModel<M>;
   const path = props.path!;
   const getValue = props.getValue;
 
@@ -21,7 +23,7 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
   function handleChange(changeValue: any) {
     const value = transformViewToModel(changeValue, props);
     const sharedParam = {
-      model,
+      // state: model.state,
       value,
       path,
     };
@@ -37,22 +39,17 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
       }
     }
 
-    const defaultChangeFn = () => {
-      model.update(path, value);
-      if (props.afterChange) {
-        props.afterChange({
-          ...sharedParam,
-        });
-      }
-    };
+    const newState = model.setKey(path, value);
 
     if (props.onChange) {
       props.onChange({
         ...sharedParam,
-        defaultChangeFn,
+        state: newState,
       });
-    } else {
-      defaultChangeFn();
+    }
+
+    if (props.onContextChange) {
+      props.onContextChange({ state: newState });
     }
   }
 
@@ -66,30 +63,29 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
       }
     : {};
 
-  if (props.needValidate) {
-    let rules = [] as ValidateFn<M>[];
-    if (props.defaultRuleFn) {
-      rules.push(props.defaultRuleFn);
-    }
-    if (props.rules) {
-      rules = rules.concat(props.rules);
-    }
-
-    if (rules.length) {
-      try {
-        let help = '';
-        help = defaultRuleManager.checkTheRules(rules, modelValue, model);
+  let rules = [] as ValidateFn<M>[];
+  if (props.defaultRuleFn) {
+    rules.push(props.defaultRuleFn);
+  }
+  if (props.rules) {
+    rules = rules.concat(props.rules);
+  }
+  if (rules.length) {
+    try {
+      let help = '';
+      help = defaultRuleManager.checkTheRules(rules, modelValue, model);
+      const validateInfoManager: ValidateInfoManager =
+        props.validateInfoManager;
+      validateInfoManager.setValidateInfo(path, help);
+      if (props.needValidate) {
         const hasError = validateHasError(help);
-        const validateInfoManager: ValidateInfoManager =
-          props.validateInfoManager;
-        validateInfoManager.setValidateInfo(path, help);
         if (hasError) {
           itemProps.help = help;
           itemProps.validateStatus = 'error';
         }
-      } catch (e) {
-        console.error(e);
       }
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -99,6 +95,8 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
     inputProps,
     value: formValue,
     onChange: handleChange,
+    model: model,
+    // children: props.children,
     clear() {
       const validateInfoManager: ValidateInfoManager =
         props.validateInfoManager;

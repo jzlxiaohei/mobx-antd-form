@@ -3,10 +3,10 @@ import { Radio } from 'antd';
 import formHoc from '../hoc';
 import { IFormComponentProps } from '../types';
 import { RadioChangeEvent } from 'antd/lib/radio';
-import { ICommonInputProps, ICommonOption } from '../types';
+import { ICommonFormOuterProps, ICommonOption } from '../types';
 
 interface F {
-  <M extends Object>(rawProps: ICommonInputProps<M>): React.ReactElement;
+  <M extends Object>(rawProps: ICommonFormOuterProps<M>): React.ReactElement;
   Button: typeof Radio.Button;
   Radio: typeof Radio;
 }
