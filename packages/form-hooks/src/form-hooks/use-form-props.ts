@@ -1,6 +1,9 @@
 import get from 'lodash/get';
 import { ICommonFormOuterProps, ValidateFn } from './types';
 import { omitCommonProps } from './utils';
+import defaultRuleManager from './validator/rules-manager';
+import { validateHasError } from './validator/utils';
+import { ValidateInfoManager } from './validator/validate-info-manager';
 
 const identity = (e: any) => e;
 
@@ -63,6 +66,33 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
       }
     : {};
 
+  if (props.needValidate) {
+    let rules = [] as ValidateFn<M>[];
+    if (props.defaultRuleFn) {
+      rules.push(props.defaultRuleFn);
+    }
+    if (props.rules) {
+      rules = rules.concat(props.rules);
+    }
+
+    if (rules.length) {
+      try {
+        let help = '';
+        help = defaultRuleManager.checkTheRules(rules, modelValue, model);
+        const hasError = validateHasError(help);
+        const validateInfoManager: ValidateInfoManager =
+          props.validateInfoManager;
+        validateInfoManager.setValidateInfo(path, help);
+        if (hasError) {
+          itemProps.help = help;
+          itemProps.validateStatus = 'error';
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
   return {
     ...props,
     itemProps,
@@ -70,9 +100,9 @@ export function useFormProps<M>(props: ICommonFormOuterProps<M>) {
     value: formValue,
     onChange: handleChange,
     clear() {
-      // if (rules) {
-      //   props.validateInfoManager.clearValidInfo(props.model, props.path);
-      // }
+      const validateInfoManager: ValidateInfoManager =
+        props.validateInfoManager;
+      validateInfoManager.clearValidInfo(props.path);
     },
   };
 }

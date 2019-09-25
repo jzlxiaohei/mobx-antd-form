@@ -1,10 +1,13 @@
 import * as React from 'react';
-import FormInput from './form-hooks/form-items/input';
-import FormCheckbox from './form-hooks/form-items/checkbox';
-import FormDateRange from './form-hooks/form-items/date-range';
-import FormTagGroup from './form-hooks/form-items/tag-group';
-
 import { createModel } from './form-hooks/create-model';
+import {
+  FormContext,
+  FormButton,
+  FormCheckbox,
+  FormInput,
+  FormDateRange,
+  FormTagGroup,
+} from './form-hooks';
 
 export function TestInput() {
   const model = createModel({
@@ -22,14 +25,26 @@ export function TestInput() {
 
   return (
     <div>
-      <FormCheckbox model={model} path="checked" />
-      <FormInput model={model} path="name1" beforeChange={handleBefore} />
-      <FormDateRange model={model} path="dateRange" />
-      <FormTagGroup
-        model={model}
-        path="optionValue"
-        options={[{ title: '1', value: 1 }, { title: '2', value: 2 }]}
-      />
+      <FormContext>
+        <FormCheckbox model={model} path="checked" />
+        <FormInput
+          rules={value => {
+            if (value === '111') {
+              return '222';
+            }
+          }}
+          model={model}
+          path="name1"
+          beforeChange={handleBefore}
+        />
+        <FormDateRange model={model} path="dateRange" />
+        <FormTagGroup
+          model={model}
+          path="optionValue"
+          options={[{ title: '1', value: 1 }, { title: '2', value: 2 }]}
+        />
+        <FormButton>保存</FormButton>
+      </FormContext>
     </div>
   );
 }

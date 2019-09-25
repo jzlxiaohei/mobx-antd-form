@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useFormProps } from './use-form-props';
 import { Form } from 'antd';
-import { FormContext } from '../form-context';
+import { FormContext } from './form-context';
 import { ICommonFormOuterProps } from './types';
 import get from 'lodash/get';
 
@@ -14,7 +14,12 @@ export default function(OriginComponent: React.ElementType) {
       transformViewToModel,
       defaultRuleFn,
     } = OriginComponent as any;
-
+    if (contextValue.model && rawProps.model) {
+      console.warn(
+        `context and props both have model.
+        You'd better to make sure path is unique in FormContext. Otherwise rule manager might be broken`,
+      );
+    }
     const defaultProps = {
       transformModelToView: transformModelToView,
       transformViewToModel: transformViewToModel,

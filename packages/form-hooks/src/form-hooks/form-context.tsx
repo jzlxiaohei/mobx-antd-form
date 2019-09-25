@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { ValidateInfoManager } from './validator/validate-info-manager';
+import { IFormHooksModel } from './create-model';
 
 export interface IContextProps<M> {
-  model?: M;
+  model?: IFormHooksModel<M>;
   itemProps?: any;
   inputProps?: any;
   needValidate?: boolean;
+  validateInfoManager?: ValidateInfoManager;
   [x: string]: any;
 }
 
@@ -35,17 +38,31 @@ export default function FormWithContext<M extends Object>(
     ...otherProps
   } = props;
   const [needValidate, setNeedValidate] = React.useState(validateAtFirst);
+  const [isValid, setIsValid] = React.useState(true);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!needValidate) {
-      setNeedValidate(true);
-    }
-
-    if (otherProps.onSubmit) {
-      otherProps.onSubmit(e);
-    }
+  const ref = React.useRef<ValidateInfoManager>();
+  if (!ref.current) {
+    ref.current = new ValidateInfoManager();
+    ref.current.onValidChange(valid => {
+      console.log(valid);
+      setIsValid(valid);
+    });
   }
+  const validateInfoManager = ref.current;
+
+  const handleSubmit = React.useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!needValidate) {
+        setNeedValidate(true);
+      }
+
+      if (otherProps.onSubmit && isValid) {
+        otherProps.onSubmit(e);
+      }
+    },
+    [needValidate, isValid],
+  );
 
   return (
     <FormContext.Provider
@@ -54,6 +71,7 @@ export default function FormWithContext<M extends Object>(
         itemProps,
         inputProps,
         needValidate,
+        validateInfoManager,
       }}
     >
       <form {...otherProps} onSubmit={e => handleSubmit(e)} />

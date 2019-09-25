@@ -3,9 +3,7 @@ import { IFormHooksModel } from './create-model';
 
 export type dayFlag = 'end' | 'start';
 
-export type ValidateFn =
-  | ((value: any, model: Record<string, any>) => string | void)
-  | string;
+export type ValidateFn<M> = ((value: any, model: M) => string | void) | string;
 
 export interface IFormComponentProps {
   value: any;
@@ -41,7 +39,7 @@ export interface ICommonFormOuterProps<M> {
   label?: string | React.ReactNode;
   itemProps?: FormItemProps;
   noFormItem?: boolean;
-  rules?: ValidateFn | ValidateFn[];
+  rules?: ValidateFn<M> | ValidateFn<M>[];
   needValidate?: boolean;
   suffixTip?: React.ReactNode;
   options?: ICommonOption[];

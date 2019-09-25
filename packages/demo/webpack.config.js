@@ -91,6 +91,7 @@ module.exports = {
     hot: true,
     compress: true,
     publicPath: '/',
+    noInfo: true,
     contentBase: srcPath,
     disableHostCheck: true,
     historyApiFallback: true,
