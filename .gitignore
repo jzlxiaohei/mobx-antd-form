@@ -3,3 +3,4 @@ node_modules
 dist
 .build.*
 packages/form/lib
+packages/auto-form/lib

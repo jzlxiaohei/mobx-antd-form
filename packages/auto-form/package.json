@@ -1,8 +1,8 @@
 {
-  "name": "@jzl/m-form",
-  "version": "0.1.1",
-  "main": "lib/m-form.js",
-  "module": "lib/m-form.module.js",
+  "name": "@jzl/auto-antd-form",
+  "version": "0.0.1",
+  "main": "lib/auto-antd-form.js",
+  "module": "lib/auto-antd-form.module.js",
   "types": "lib/index.d.ts",
   "license": "MIT",
   "scripts": {
@@ -21,8 +21,6 @@
   },
   "peerDependencies": {
     "antd": "3.x",
-    "mobx": "5.x || 4.x",
-    "mobx-react": "6.x || 5.x",
     "moment": "^2.24.0",
     "react": ">=16.8",
     "react-dom": ">=16.8.6"
@@ -30,7 +28,6 @@
   "devDependencies": {
     "antd": "^3.21.4",
     "fs-extra": "^8.1.0",
-    "mobx-react": "^6.1.3",
     "moment": "^2.24.0",
     "prettier": "^1.18.2",
     "react": "^16.9.0",
