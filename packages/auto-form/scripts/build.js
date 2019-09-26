@@ -102,7 +102,7 @@ async function build() {
   await Promise.all([
     generateBundledModule(
       es5Build,
-      path.join('lib', `${libName}.js1`),
+      path.join('lib', `${libName}.js`),
       'cjs',
       false,
     ),
