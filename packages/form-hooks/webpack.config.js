@@ -9,7 +9,9 @@ const port = 8053;
 const resolvePath = _path => {
   return path.join(__dirname, _path);
 };
-const srcPath = resolvePath('../src');
+const srcPath = resolvePath('./src');
+
+const autoFormSrcPath = resolvePath('../auto-form');
 
 function getStyleLoader() {
   return [
@@ -50,7 +52,7 @@ module.exports = {
     rules: [
       {
         test: /\.(j|t)sx?$/,
-        include: [resolvePath('./src'), resolvePath('../form/src')],
+        include: [srcPath, autoFormSrcPath],
         use: {
           loader: 'babel-loader',
           options: {
@@ -98,7 +100,7 @@ module.exports = {
     overlay: true,
     stats: 'minimal',
     watchOptions: {
-      ignored: [resolvePath('../dist'), resolvePath('../node_modules')],
+      ignored: [resolvePath('./dist'), resolvePath('./node_modules')],
     },
   },
 };

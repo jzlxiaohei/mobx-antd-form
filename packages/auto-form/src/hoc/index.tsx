@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { useFormProps } from './use-form-props';
 import { Form } from 'antd';
-import { FormContext } from '../form-context';
-import { ICommonFormOuterProps } from '../types';
-import get from 'lodash/get';
+import { ICommonFormOuterProps, ValidateFn } from '../types';
 
 export default function(OriginComponent: React.ElementType) {
   function FormItemHoc<M>(rawProps: ICommonFormOuterProps<M>) {
-    const contextValue = React.useContext(FormContext);
-
     const {
       transformModelToView,
       transformViewToModel,
       defaultRuleFn,
+    }: {
+      transformModelToView: ICommonFormOuterProps<M>['transformModelToView'];
+      transformViewToModel: ICommonFormOuterProps<M>['transformViewToModel'];
+      defaultRuleFn: ValidateFn<M>;
     } = OriginComponent as any;
     if (rawProps.model) {
       throw new Error(`pass model in FormContext`);
@@ -20,22 +20,12 @@ export default function(OriginComponent: React.ElementType) {
     const defaultProps = {
       transformModelToView: transformModelToView,
       transformViewToModel: transformViewToModel,
-      model: contextValue.model,
-      itemProps: contextValue.itemProps,
-      onContextChange: contextValue.onContextChange,
-      needValidate: contextValue.needValidate,
-      validateInfoManager: contextValue.validateInfoManager,
-      inputPropsFromContext: contextValue.inputProps,
       defaultRuleFn,
     };
-    const getValue = rawProps.getValue || get;
 
-    // const value = getValue(rawProps.model.data, rawProps.path);
-    // React.useMemo to avoid render
     const props = useFormProps({
       ...defaultProps,
       ...rawProps,
-      getValue,
     });
 
     React.useEffect(() => {
@@ -44,25 +34,18 @@ export default function(OriginComponent: React.ElementType) {
       };
     }, []);
 
+    const commonProps = {
+      value: props.value,
+      onChange: props.onChange,
+      model: props.model,
+    };
+
     if (props.noFormItem) {
-      return (
-        <OriginComponent
-          {...props.inputProps}
-          value={props.value}
-          onChange={props.onChange}
-          children={props.children}
-        />
-      );
+      return <OriginComponent {...props.inputProps} {...commonProps} />;
     }
     return (
       <Form.Item {...props.itemProps} label={props.label}>
-        <OriginComponent
-          {...props.inputProps}
-          value={props.value}
-          onChange={props.onChange}
-          model={props.model}
-          children={props.children}
-        />
+        <OriginComponent {...props.inputProps} {...commonProps} />
         {props.suffixTip}
       </Form.Item>
     );

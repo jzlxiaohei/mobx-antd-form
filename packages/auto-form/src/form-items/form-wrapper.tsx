@@ -1,34 +1,26 @@
 import * as React from 'react';
-import formHoc from '../hoc';
-import { IFormComponentProps } from '../types';
+import { Form } from 'antd';
 import { IFormHooksModel } from '../create-model';
+import { FormContext } from '../form-context';
+import { ICommonFormOuterProps } from '../types';
 
-function FormWrapper<M>(
-  props: IFormComponentProps & {
+export default function FormWrapper<M>(
+  props: Pick<
+    ICommonFormOuterProps<M>,
+    'label' | 'itemProps' | 'noFormItem' | 'suffixTip'
+  > & {
     children: (model: IFormHooksModel<M>) => React.ReactElement;
   },
 ) {
-  return props.children(props.model);
+  const contextValue = React.useContext(FormContext);
+  const children = props.children(contextValue.model);
+  if (props.noFormItem) {
+    return children;
+  }
+  return (
+    <Form.Item {...props.itemProps} label={props.label}>
+      {children}
+      {props.suffixTip}
+    </Form.Item>
+  );
 }
-
-export default formHoc(FormWrapper);
-
-// export default function FormWrapper(props: Omit<ICommonInputProps<any>, 'path'>) {
-//   let className = 'm-form-item-wrapper';
-//   if (props.className) {
-//     className += ` ${props.className}`;
-//   }
-//   return (
-//     <FormContext.Consumer>
-//       {contextValue => (
-//         <Form.Item
-//           className={className}
-//           {...(props.itemProps || contextValue.itemProps)}
-//           label={props.label}
-//         >
-//           {props.children}
-//         </Form.Item>
-//       )}
-//     </FormContext.Consumer>
-//   );
-// }

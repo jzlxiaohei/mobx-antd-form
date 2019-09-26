@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createModel, IFormHooksModel } from './form-hooks/create-model';
+import { IFormHooksModel } from './form-hooks/create-model';
 import {
   FormContext,
   FormButton,
@@ -9,9 +9,20 @@ import {
   FormTagGroup,
   FormWrapper,
   FormInputNumber,
-} from './form-hooks';
+} from '../../auto-form/src';
 import { Button } from 'antd/lib/radio';
 import { IChangeParam } from './form-hooks/types';
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 4 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 20 },
+  },
+};
 
 function create() {
   return {
@@ -40,36 +51,35 @@ const actions = {
 export function TestInput() {
   const [state, setState] = React.useState(create());
 
+  function handleSubmit({ state }: { state: IModelState }) {
+    console.log(state);
+  }
+
   function handleBefore(
     { oldValue, value } = { oldValue: String, value: String },
   ) {
-    // console.log(oldValue, value);
-  }
-
-  function handleSubmit(
-    { state }: { state: IModelState },
-    e: React.FormEvent<HTMLFormElement>,
-  ) {
-    e.preventDefault();
-    console.log(state);
+    console.log(oldValue, value);
   }
 
   const handleItemChange = (args: IChangeParam<IModelState>) => {
     console.log(args);
   };
 
-  function handleChange(args: { state: IModelState }) {
+  function handleContextChange(args: { state: IModelState }) {
     setState(args.state);
   }
 
+  // 传 initState 是 非受控模式，
+  // 传 state 后，是受控的模式. 一般情况非受控模式即可，除非需要在onChange里，对 state 进行变更
   return (
     <div>
       <FormContext
         onSubmit={handleSubmit}
         state={state}
-        onContextChange={handleChange}
+        onContextChange={handleContextChange}
+        itemProps={formItemLayout}
       >
-        <FormCheckbox path="checked" />
+        <FormCheckbox path="checked" label="checked" />
         <FormInput
           rules={value => {
             if (value === '111') {
@@ -81,21 +91,25 @@ export function TestInput() {
           path="name1"
           beforeChange={handleBefore}
         />
-        <FormInput path="nested.name" />
-        <FormInputNumber path="nested.age" />
-        <FormDateRange path="dateRange" />
+        <FormInput path="nested.name" label="nested.name" />
+        <FormInputNumber path="nested.age" label="nested.age" />
+        <FormDateRange path="dateRange" label="date-range" />
         <FormTagGroup
           path="optionValue"
-          options={[{ title: '1', value: 1 }, { title: '2', value: 2 }]}
+          label="options"
+          options={[
+            { title: '第一个', value: 1 },
+            { title: '第二个', value: 2 },
+          ]}
         />
-        <FormWrapper>
+        <FormWrapper noFormItem>
           {(model: IFormHooksModel<IModelState>) => {
             const Inputs = model.state.dynamicFields.map((f, index) => {
               return (
                 <FormInput
                   label={f.name}
                   key={index}
-                  path={`dynamicFields.${index}.name}`}
+                  path={`dynamicFields.${index}.name`}
                 />
               );
             });
@@ -105,7 +119,9 @@ export function TestInput() {
             return (
               <React.Fragment>
                 {Inputs}
-                <Button onClick={handleAddDynamic}>add dynamicFields</Button>
+                <div>
+                  <Button onClick={handleAddDynamic}>add dynamicFields</Button>
+                </div>
               </React.Fragment>
             );
           }}

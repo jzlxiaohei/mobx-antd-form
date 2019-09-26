@@ -25,7 +25,7 @@ export interface IChangeParam<M> {
 
 export interface ICommonFormOuterProps<M> {
   path?: string;
-  value?: any;
+  // value?: any;
   onChange?(param: IChangeParam<M>): void;
   beforeChange?(
     param: IChangeParam<M> & {
@@ -44,6 +44,6 @@ export interface ICommonFormOuterProps<M> {
   options?: ICommonOption[];
   dayFlags?: dayFlag[];
   dayFlag?: dayFlag;
-  children?: (model: IFormHooksModel<M>) => React.ReactElement;
+  // children?: (model: IFormHooksModel<M>) => React.ReactElement;
   [x: string]: any;
 }
