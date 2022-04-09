@@ -22,7 +22,7 @@
   "peerDependencies": {
     "antd": "3.x",
     "immer": "^4.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "react": ">=16.8",
     "react-dom": ">=16.8.6"
   },
@@ -30,7 +30,7 @@
     "antd": "^3.21.4",
     "fs-extra": "^8.1.0",
     "immer": "^4.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "prettier": "^1.18.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
